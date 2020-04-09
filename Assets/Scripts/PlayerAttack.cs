@@ -10,14 +10,16 @@ public class PlayerAttack : MonoBehaviour
     AnimatorClipInfo[] currentClipInfo;
     private float clipNormalizedTime;
     private float damage = 1;
-    private bool Attacking;
+    private bool AttackRange;
+    private bool Attacked;
 
     // Start is called before the first frame update
     void Start()
     {
         //body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        Attacking = false;
+        Attacked = false;
+        AttackRange = false;
     }
 
     // Update is called once per frame
@@ -37,7 +39,6 @@ public class PlayerAttack : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Z))
         {
-            Attacking = true;
             if ((currentClipInfo[0].clip.name.Equals("Idle")) || (currentClipInfo[0].clip.name.Equals("Still")))
             {
                 animator.SetBool("Attack_Player", true);
@@ -55,26 +56,31 @@ public class PlayerAttack : MonoBehaviour
                 animator.SetBool("Attack_Extra", true);
             }
         }
-
-        if (clipNormalizedTime >= 1f)
+        if ((clipNormalizedTime >= .3f) && (clipNormalizedTime < 1f))
+            AttackRange = true;
+        else if (clipNormalizedTime >= 1f)
         {
             animator.SetBool("Attack_Player", false);
             animator.SetBool("Attack_Walk", false);
             animator.SetBool("Attack_Run", false);
             animator.SetBool("Attack_Extra", false);
             clipNormalizedTime = 0f;
-            Attacking = false;
+            AttackRange = false;
+            if (Attacked)
+                Attacked = !Attacked;
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnCollisionStay2D(Collision2D other)
     {
-        if ((other.gameObject.tag == "Enemy") && (Attacking))
+        if ((other.gameObject.tag == "Enemy") && (AttackRange))
         {
-            Debug.Log("ciao");
-            enemyHealth = other.gameObject.GetComponent<EnemyHealth>();
-            enemyHealth.Damage(damage);
+            if (!Attacked)
+            {
+                enemyHealth = other.gameObject.GetComponent<EnemyHealth>();
+                enemyHealth.Damage(damage);
+                Attacked = true;
+            }
         }
     }
-
 }

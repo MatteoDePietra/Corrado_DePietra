@@ -23,9 +23,12 @@ public class EnemyBehavior : MonoBehaviour
     private bool left = true;                                                   //
     private int n = 5;                                                          ////////////////////
 
-    float damage = 1;                                                           //
-    bool Attacking = false;                                                     //
-    private float timerAttack = 1;
+    private float damage = 1;                                                   //
+    private bool Attacking;                                                     //
+    private bool Attacked;                                                      //
+    private bool AttackRange;                                                      //
+    AnimatorClipInfo[] currentClipInfo;                                         //
+    private float clipNormalizedTime;                                           //
 
 
     void Start()                                                                // Start is called before the first frame update
@@ -33,10 +36,13 @@ public class EnemyBehavior : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         col = GetComponent<CapsuleCollider2D>();
-        attackDistance = col.size.x + .2f;
         timer = restTime;
         StartCoroutine(DoCheck());
         spawnPosition = transform.position;
+        attackDistance = 0;
+        Attacking = false;
+        Attacked = false;
+        AttackRange = false;
     }
 
     void Update()                                                               // Update is called once per frame
@@ -44,6 +50,7 @@ public class EnemyBehavior : MonoBehaviour
         Path();
         body.velocity = new Vector2(Vector2.right.x * h * movementSpeed, body.velocity.y);
         EnemyAnimation();
+        Attack();
     }
 
     private IEnumerator DoCheck()                                               // Check all distance 
@@ -124,10 +131,10 @@ public class EnemyBehavior : MonoBehaviour
             Attacking = false;
 
         }
-        else if ((DistanceCheck() < attackDistance) && (DistanceCheck(actualPosition, spawnPosition) < spawnDistance))
+        else if ((DistanceCheck() <= attackDistance) && (DistanceCheck(actualPosition, spawnPosition) < spawnDistance))
         {
             h = 0;
-            //Attacking = true;
+            Attacking = true;
         }
     }
 
@@ -145,31 +152,57 @@ public class EnemyBehavior : MonoBehaviour
         if (h != 0)
             animator.SetBool("IsWalking", true);
         else animator.SetBool("IsWalking", false);
+    }
+
+    private void Attack()
+    {
+        currentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
+
+        if (currentClipInfo[0].clip.name.Equals("Attack"))
+        {
+            clipNormalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        }
 
         if (Attacking)
-        {
-            timerAttack -= Time.deltaTime;
-            if (timerAttack <= 0)
+            animator.SetBool("IsAttacking", true);
+        if ((clipNormalizedTime >= .6f) && (clipNormalizedTime < 1f))
+            if (!AttackRange)
             {
-                animator.SetBool("IsAttacking", true);
-                col.size = new Vector2(col.size.x + .1f, col.size.y);
-                timerAttack = 1;
+                //col.size.Set(col.size.x + .1f, col.size.y);
+                AttackRange = !AttackRange;
+        Debug.Log(clipNormalizedTime);
             }
-        }
-        else
+        else if (clipNormalizedTime >= 1f)
         {
-            timerAttack = 1;
+            if (AttackRange)
+                AttackRange = !AttackRange;
+            if (Attacked)
+                Attacked = !Attacked;
             animator.SetBool("IsAttacking", false);
-            col.size = new Vector2(col.size.x - .1f, col.size.y);
+            Attacking = false;
+            clipNormalizedTime = 0f;
+            //col.size.Set(col.size.x - .1f, col.size.y);
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if ((other.gameObject.tag == "Player")&&(attackDistance==0))
+        {
+            h = 0;
+            attackDistance = Vector2.Distance(actualPosition, playerPosition);
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnCollisionStay2D(Collision2D other)
     {
-        if ((other.gameObject.tag=="Player") && (Attacking))
+        if ((other.gameObject.tag == "Player") && (AttackRange))
         {
-            playerHealth = other.gameObject.GetComponent<PlayerHealth>();
-            playerHealth.Damage(damage);
+            if (!Attacked)
+            {
+                playerHealth = other.gameObject.GetComponent<PlayerHealth>();
+                playerHealth.Damage(damage);
+                Attacked = true;
+            }
         }
     }
 }
