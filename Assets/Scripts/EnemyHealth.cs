@@ -28,7 +28,6 @@ public class EnemyHealth : MonoBehaviour
     private void CheckGround()
     {
         float distance = 0.03f;
-
         if ((Physics2D.Raycast(transform.position, Vector2.down, distance, layer)) && (animator.GetBool("Damage")))
         {
             animator.SetBool("Damage", false);
