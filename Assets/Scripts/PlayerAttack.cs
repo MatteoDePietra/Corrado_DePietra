@@ -4,31 +4,33 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    //Rigidbody2D body;
     Animator animator;
     EnemyHealth enemyHealth;
     AnimatorClipInfo[] currentClipInfo;
+    LayerMask enemyLayer;
+    [SerializeField]
+    private Transform attackPoint;
+
     private float clipNormalizedTime;
     private float damage = 1;
-    private bool AttackRange;
     private bool Attacked;
+    private float AttackRadius = .3f;
 
     // Start is called before the first frame update
     void Start()
     {
-        //body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        enemyLayer = LayerMask.GetMask("Enemy");
         Attacked = false;
-        AttackRange = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Attack();
+        AttackAnimation();
     }
 
-    void Attack()
+    private void AttackAnimation()
     {
         currentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
 
@@ -57,7 +59,7 @@ public class PlayerAttack : MonoBehaviour
             }
         }
         if ((clipNormalizedTime >= .3f) && (clipNormalizedTime < 1f))
-            AttackRange = true;
+            Attack();
         else if (clipNormalizedTime >= 1f)
         {
             animator.SetBool("Attack_Player", false);
@@ -65,35 +67,29 @@ public class PlayerAttack : MonoBehaviour
             animator.SetBool("Attack_Run", false);
             animator.SetBool("Attack_Extra", false);
             clipNormalizedTime = 0f;
-            AttackRange = false;
             if (Attacked)
                 Attacked = !Attacked;
         }
     }
 
-    /*private void OnCollisionStay2D(Collision2D other)
+    private void Attack()
     {
-        if ((other.gameObject.tag == "Enemy") && (AttackRange))
-        {
-            if (!Attacked)
-            {
-                enemyHealth = other.gameObject.GetComponent<EnemyHealth>();
-                enemyHealth.Damage(damage);
-                Attacked = true;
-            }
-        }
-    }*/
+        Collider2D[] enemyHit = Physics2D.OverlapCircleAll(attackPoint.position, AttackRadius, enemyLayer);
 
-    private void OnTriggerStay(Collider other)
-    {
-        if ((other.gameObject.tag == "Enemy") && (AttackRange))
+        foreach(Collider2D enemy in enemyHit)
         {
             if (!Attacked)
             {
-                enemyHealth = other.gameObject.GetComponent<EnemyHealth>();
-                enemyHealth.Damage(damage);
+                enemy.GetComponent<EnemyHealth>().Damage(damage);
                 Attacked = true;
             }
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+            return;
+        Gizmos.DrawWireSphere(attackPoint.position, AttackRadius);
     }
 }

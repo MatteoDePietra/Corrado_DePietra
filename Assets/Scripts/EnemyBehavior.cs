@@ -16,6 +16,7 @@ public class EnemyBehavior : MonoBehaviour
     private float movementTime = 2f;                                            //
     private float restTime = 3f;                                                //
     private float dangerDistance = 2.5f;                                        //
+    private float attackDistance = .75f;                                         //
     private float spawnDistance = 3f;                                           //Movement and path variables
     private float timer;                                                        //
     private float h = 0;                                                        //
@@ -49,8 +50,8 @@ public class EnemyBehavior : MonoBehaviour
     {
         Path();
         body.velocity = new Vector2(Vector2.right.x * h * movementSpeed, body.velocity.y);
-        EnemyAnimation();
-        Attack();
+        MovementAnimation();
+        AttackAnimation();
     }
 
     private IEnumerator DoCheck()                                               // Check all distance 
@@ -123,17 +124,17 @@ public class EnemyBehavior : MonoBehaviour
             }
             else timer -= Time.deltaTime;
         }
-        else if ((DistanceCheck() <= dangerDistance) && (DistanceCheck(actualPosition, spawnPosition) < spawnDistance) && (!Attacking))
+        else if ((DistanceCheck() > attackDistance) && (DistanceCheck() <= dangerDistance) && (DistanceCheck(actualPosition, spawnPosition) < spawnDistance))
         {
             if ((playerPosition.x - actualPosition.x) > 0)
                 h = 2;
             else h = -2;
         }
-        else if (Attacking)
+        else if ((DistanceCheck() <= attackDistance) && (DistanceCheck(actualPosition, spawnPosition) < spawnDistance))
             h = 0;
     }
 
-    private void EnemyAnimation ()                                              // Start animation
+    private void MovementAnimation ()                                              // Start animation
     {
         if (h < 0)
         {
@@ -149,7 +150,7 @@ public class EnemyBehavior : MonoBehaviour
         else animator.SetBool("IsWalking", false);
     }
 
-    private void Attack()
+    private void AttackAnimation()
     {
         currentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
 
@@ -183,37 +184,4 @@ public class EnemyBehavior : MonoBehaviour
             timerAttack = 1f;
         }
     }
-    private void OnCollisionStay2D(Collision2D other)
-    {
-        if (other.gameObject.tag == "Player")
-            Attacking = true;
-    }
-
-    /*private void OnCollisionStay2D(Collision2D other)
-    {
-        if (other.gameObject.tag == "Player")
-        {
-            Attacking = true;
-            if ((!Attacked) && (AttackRange))
-            {
-                playerHealth = other.gameObject.GetComponent<PlayerHealth>();
-                playerHealth.Damage(damage);
-                Attacked = true;
-            }
-        }
-    }
-
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.gameObject.tag == "Player")
-        {
-            //Attacking = true;
-            if ((!Attacked) && (AttackRange))
-            {
-                playerHealth = other.gameObject.GetComponent<PlayerHealth>();
-                playerHealth.Damage(damage);
-                Attacked = true;
-            }
-        }
-    }*/
 }
