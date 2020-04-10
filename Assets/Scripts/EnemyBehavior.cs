@@ -37,7 +37,7 @@ public class EnemyBehavior : MonoBehaviour
         animator = GetComponent<Animator>();
         col = GetComponent<CapsuleCollider2D>();
         timer = restTime;
-        timerAttack = 2f;
+        timerAttack = 1f;
         StartCoroutine(DoCheck());
         spawnPosition = transform.position;
         Attacking = false;
@@ -61,7 +61,7 @@ public class EnemyBehavior : MonoBehaviour
             playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
             DistanceCheck();
             DistanceCheck(actualPosition, spawnPosition);
-            yield return new WaitForSeconds(.2f);
+            yield return new WaitForSeconds(.3f);
         }
     }
 
@@ -173,7 +173,6 @@ public class EnemyBehavior : MonoBehaviour
             }
         if (clipNormalizedTime >= 1f)
         {
-            Debug.Log(clipNormalizedTime);
             animator.SetBool("IsAttacking", false);
             clipNormalizedTime = 0f;
             if (AttackRange)
@@ -181,11 +180,16 @@ public class EnemyBehavior : MonoBehaviour
             if (Attacked)
                 Attacked = !Attacked;
             Attacking = false;
-            timerAttack = 2f;
+            timerAttack = 1f;
         }
     }
-
     private void OnCollisionStay2D(Collision2D other)
+    {
+        if (other.gameObject.tag == "Player")
+            Attacking = true;
+    }
+
+    /*private void OnCollisionStay2D(Collision2D other)
     {
         if (other.gameObject.tag == "Player")
         {
@@ -198,4 +202,18 @@ public class EnemyBehavior : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            //Attacking = true;
+            if ((!Attacked) && (AttackRange))
+            {
+                playerHealth = other.gameObject.GetComponent<PlayerHealth>();
+                playerHealth.Damage(damage);
+                Attacked = true;
+            }
+        }
+    }*/
 }

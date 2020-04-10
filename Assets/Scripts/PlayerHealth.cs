@@ -52,6 +52,6 @@ public class PlayerHealth : MonoBehaviour
         playerMovement.moveSpeed = 0f;
         body.velocity = new Vector2(0, 0);
         body.AddForce(Vector2.up *  0.2f, ForceMode2D.Impulse);
-        Debug.Log(life);
+        Debug.Log("La vita del giocatore è: " + life);
     }
 }

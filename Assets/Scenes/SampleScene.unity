@@ -661,6 +661,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5b642065f65a4e7abd986d9dcc7e006, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!58 &264311070
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264311059}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 1
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.28}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &276765050
 GameObject:
   m_ObjectHideFlags: 0
@@ -2292,7 +2308,7 @@ GameObject:
   - component: {fileID: 561899954}
   - component: {fileID: 561899953}
   - component: {fileID: 561899955}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Hound
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -9059,7 +9075,8 @@ GameObject:
   - component: {fileID: 1761615801}
   - component: {fileID: 1761615802}
   - component: {fileID: 1761615803}
-  m_Layer: 0
+  - component: {fileID: 1761615804}
+  m_Layer: 11
   m_Name: Knight
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -9210,6 +9227,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15a4f50b81d5044a586f9d3ad1587bfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!58 &1761615804
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761615796}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.5}
+  serializedVersion: 2
+  m_Radius: 0.7
 --- !u!1 &1795722236
 GameObject:
   m_ObjectHideFlags: 0
@@ -10621,7 +10654,7 @@ PrefabInstance:
     - target: {fileID: 6141238985131609360, guid: 85a339e4ebe7b4330ac61062129a73b4,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6141238985131609360, guid: 85a339e4ebe7b4330ac61062129a73b4,
         type: 3}

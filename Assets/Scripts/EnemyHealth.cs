@@ -37,6 +37,7 @@ public class EnemyHealth : MonoBehaviour
     public void Damage(float damage)
     {
         life -= damage;
+        Debug.Log("Vita del nemico: " + life);
         animator.SetBool("Damage", true);
         body.velocity = new Vector2(0, 0);
         body.AddForce(Vector2.up * 0.2f, ForceMode2D.Impulse);

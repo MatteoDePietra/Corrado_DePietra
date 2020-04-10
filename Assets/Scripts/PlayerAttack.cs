@@ -71,7 +71,20 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay2D(Collision2D other)
+    /*private void OnCollisionStay2D(Collision2D other)
+    {
+        if ((other.gameObject.tag == "Enemy") && (AttackRange))
+        {
+            if (!Attacked)
+            {
+                enemyHealth = other.gameObject.GetComponent<EnemyHealth>();
+                enemyHealth.Damage(damage);
+                Attacked = true;
+            }
+        }
+    }*/
+
+    private void OnTriggerStay(Collider other)
     {
         if ((other.gameObject.tag == "Enemy") && (AttackRange))
         {
