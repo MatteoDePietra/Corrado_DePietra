@@ -7,7 +7,6 @@ public class PlayerHealth : MonoBehaviour
 {
     Animator animator;
     PlayerMovement playerMovement;
-
     [SerializeField]
     private float life = 5;
     
@@ -40,7 +39,7 @@ public class PlayerHealth : MonoBehaviour
     private IEnumerator stopMovement()
     {
         playerMovement.moveSpeed = 0f;
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSecondsRealtime(.3f);
         playerMovement.moveSpeed = 1.7f;
     }
 }

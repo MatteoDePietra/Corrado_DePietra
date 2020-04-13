@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     Animator animator;
-    EnemyHealth enemyHealth;
     AnimatorClipInfo[] currentClipInfo;
     LayerMask enemyLayer;
     [SerializeField]

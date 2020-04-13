@@ -6,8 +6,9 @@ public class EnemyBehavior : MonoBehaviour
 {
     Rigidbody2D body;
     Animator animator;
-    CapsuleCollider2D col;
-    PlayerHealth playerHealth;
+    LayerMask playerLayer;
+    [SerializeField]
+    private Transform attackPoint;
     Vector2 spawnPosition;
     Vector2 actualPosition;
     Vector2 playerPosition;
@@ -16,8 +17,9 @@ public class EnemyBehavior : MonoBehaviour
     private float movementTime = 2f;                                            //
     private float restTime = 3f;                                                //
     private float dangerDistance = 2.5f;                                        //
-    private float attackDistance = .75f;                                         //
-    private float spawnDistance = 3f;                                           //Movement and path variables
+    [SerializeField]                                                            //
+    private float attackDistance;                                               //  Movement and path variables
+    private float spawnDistance = 3f;                                           //
     private float timer;                                                        //
     private float h = 0;                                                        //
     private bool left = true;                                                   //
@@ -26,24 +28,25 @@ public class EnemyBehavior : MonoBehaviour
     private float damage = 1;                                                   //
     private bool Attacking;                                                     //
     private bool Attacked;                                                      //
-    private bool AttackRange;                                                   //
     AnimatorClipInfo[] currentClipInfo;                                         //
     private float clipNormalizedTime;                                           //
-    private float timerAttack;
+    public float timerAttack;
+    [SerializeField]
+    private float AttackRadius = .6f;
+
 
 
     void Start()                                                                // Start is called before the first frame update
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        col = GetComponent<CapsuleCollider2D>();
+        playerLayer = LayerMask.GetMask("Player");
         timer = restTime;
-        timerAttack = 1f;
+        timerAttack = .5f;
         StartCoroutine(DoCheck());
         spawnPosition = transform.position;
         Attacking = false;
         Attacked = false;
-        AttackRange = false;
     }
 
     void Update()                                                               // Update is called once per frame
@@ -68,12 +71,12 @@ public class EnemyBehavior : MonoBehaviour
 
     private float DistanceCheck()                                               // Check distance between player and enemy
     {
-        return Vector2.Distance(actualPosition, playerPosition);
+        return Mathf.Abs(actualPosition.x - playerPosition.x);
     }
 
     private float DistanceCheck(Vector2 Position1, Vector2 Position2)           // Check distance between 2 position
     {
-        return Vector2.Distance(Position1, Position2);
+        return Mathf.Abs(Position1.x - Position2.x);
     }
 
     private void Path()                                                         //  Path design of walking enemy
@@ -124,14 +127,17 @@ public class EnemyBehavior : MonoBehaviour
             }
             else timer -= Time.deltaTime;
         }
-        else if ((DistanceCheck() > attackDistance) && (DistanceCheck() <= dangerDistance) && (DistanceCheck(actualPosition, spawnPosition) < spawnDistance))
+        else if (((DistanceCheck() > attackDistance) && (DistanceCheck() <= dangerDistance) && (DistanceCheck(actualPosition, spawnPosition) < spawnDistance)) && (!Attacking))
         {
             if ((playerPosition.x - actualPosition.x) > 0)
                 h = 2;
             else h = -2;
         }
         else if ((DistanceCheck() <= attackDistance) && (DistanceCheck(actualPosition, spawnPosition) < spawnDistance))
+        {
+            Attacking = true;
             h = 0;
+        }
     }
 
     private void MovementAnimation ()                                              // Start animation
@@ -146,8 +152,11 @@ public class EnemyBehavior : MonoBehaviour
         }
 
         if (h != 0)
-            animator.SetBool("IsWalking", true);
-        else animator.SetBool("IsWalking", false);
+        {
+            timerAttack = .5f;
+            animator.SetBool("Walk", true);
+        }
+        else animator.SetBool("Walk", false);
     }
 
     private void AttackAnimation()
@@ -161,27 +170,41 @@ public class EnemyBehavior : MonoBehaviour
 
         if (Attacking)
         {
-            timerAttack -= Time.deltaTime;
             if (((currentClipInfo[0].clip.name.Equals("Idle")) || (currentClipInfo[0].clip.name.Equals("Walk"))) && (timerAttack <= 0))
-            {
-                animator.SetBool("IsAttacking", true);
-            }
+                animator.SetBool("Attack", true);
+            timerAttack -= Time.deltaTime;
         }
         if ((clipNormalizedTime >= .5f) && (clipNormalizedTime < 1f))
-            if (!AttackRange)
-            {
-                AttackRange = !AttackRange;
-            }
+            Attack();
         if (clipNormalizedTime >= 1f)
         {
-            animator.SetBool("IsAttacking", false);
+            timerAttack = .5f;
+            animator.SetBool("Attack", false);
             clipNormalizedTime = 0f;
-            if (AttackRange)
-                AttackRange = !AttackRange;
             if (Attacked)
                 Attacked = !Attacked;
             Attacking = false;
-            timerAttack = 1f;
         }
+    }
+
+    private void Attack()
+    {
+        Collider2D[] playerHit = Physics2D.OverlapCircleAll(attackPoint.position, AttackRadius, playerLayer);
+
+        foreach (Collider2D player in playerHit)
+        {
+            if (!Attacked)
+            {
+                player.GetComponent<PlayerHealth>().Damage(damage);
+                Attacked = true;
+            }
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+            return;
+        Gizmos.DrawWireSphere(attackPoint.position, AttackRadius);
     }
 }

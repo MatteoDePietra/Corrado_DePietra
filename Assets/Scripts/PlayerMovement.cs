@@ -49,22 +49,23 @@ public class PlayerMovement : MonoBehaviour
 
     void animationMovement()
     {
-        animator.SetFloat("IsWalking", Mathf.Abs(h));                           // If the player is moving without Coin
-
         if (body.velocity.x < 0)
         {
             body.transform.localScale = new Vector3(-1, 1, 1);
+            animator.SetBool("IsWalking", true);
         }
         else if (body.velocity.x > 0)
         {
             body.transform.localScale = new Vector3(1, 1, 1);
+            animator.SetBool("IsWalking", true);
         }
         else if ((body.velocity.x == 0) && (body.velocity.y == 0) && (timer > 0))
         {
             timer -= Time.deltaTime;
+            animator.SetBool("IsWalking", false);
         }
 
-        if ((body.velocity.x != 0) || (body.velocity.y != 0) || (animator.GetBool("Attack_Player")))
+        if ((body.velocity.x != 0) || (body.velocity.y != 0) || (animator.GetBool("Attack_Player")) || (animator.GetBool("Damage")))
         {
             timer = 10f;
             animator.SetBool("IsStill", false);
@@ -85,4 +86,3 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 }
-
