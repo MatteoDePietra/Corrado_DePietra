@@ -8,7 +8,7 @@ public class PlayerAttack : MonoBehaviour
     AnimatorClipInfo[] currentClipInfo;
     LayerMask enemyLayer;
     [SerializeField]
-    private Transform attackPoint;
+    private Transform attackPoint = null;
 
     private float clipNormalizedTime;
     private float damage = 1;

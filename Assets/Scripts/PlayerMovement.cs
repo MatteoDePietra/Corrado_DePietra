@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     Animator animator;
 
     [SerializeField]
-    public float moveSpeed = 1.5f;
+    public float moveSpeed = 1.2f;
     [SerializeField]
     public float moveCoin = 1f;                                                 // If Coin velocity, moveCoin = 2;
     [SerializeField]

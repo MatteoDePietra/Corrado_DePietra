@@ -40,6 +40,6 @@ public class PlayerHealth : MonoBehaviour
     {
         playerMovement.moveSpeed = 0f;
         yield return new WaitForSecondsRealtime(.3f);
-        playerMovement.moveSpeed = 1.7f;
+        playerMovement.moveSpeed = 1.2f;
     }
 }

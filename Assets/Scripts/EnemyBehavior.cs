@@ -8,7 +8,7 @@ public class EnemyBehavior : MonoBehaviour
     Animator animator;
     LayerMask playerLayer;
     [SerializeField]
-    private Transform attackPoint;
+    private Transform attackPoint = null;
     Vector2 spawnPosition;
     Vector2 actualPosition;
     Vector2 playerPosition;
@@ -18,7 +18,7 @@ public class EnemyBehavior : MonoBehaviour
     private float restTime = 3f;                                                //
     private float dangerDistance = 2.5f;                                        //
     [SerializeField]                                                            //
-    private float attackDistance;                                               //  Movement and path variables
+    private float attackDistance = 0;                                           //  Movement and path variables
     private float spawnDistance = 3f;                                           //
     private float timer;                                                        //
     private float h = 0;                                                        //
@@ -30,7 +30,7 @@ public class EnemyBehavior : MonoBehaviour
     private bool Attacked;                                                      //
     AnimatorClipInfo[] currentClipInfo;                                         //
     private float clipNormalizedTime;                                           //
-    public float timerAttack;
+    private float timerAttack;
     [SerializeField]
     private float AttackRadius = .6f;
 
@@ -174,9 +174,10 @@ public class EnemyBehavior : MonoBehaviour
                 animator.SetBool("Attack", true);
             timerAttack -= Time.deltaTime;
         }
+
         if ((clipNormalizedTime >= .5f) && (clipNormalizedTime < 1f))
             Attack();
-        if (clipNormalizedTime >= 1f)
+        else if ((clipNormalizedTime >= 1f) || (currentClipInfo[0].clip.name.Equals("Damage")))
         {
             timerAttack = .5f;
             animator.SetBool("Attack", false);
