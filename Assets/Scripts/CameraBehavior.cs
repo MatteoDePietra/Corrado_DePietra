@@ -19,7 +19,7 @@ public class CameraBehavior : MonoBehaviour
     private void Start()
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;
-        offset = new Vector3(0, 0, -10);
+        offset = new Vector3(0, 1, -10);
 
         previousCamPos = transform.position;
         parallaxScale = new float[background.Length];
