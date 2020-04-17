@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Movement()
     {
-        h = Input.GetAxis("Horizontal");                                  
+        h = Input.GetAxisRaw("Horizontal");                                  
         Vector2 velocity;                                                       // local var
 
         if (moveMirror)

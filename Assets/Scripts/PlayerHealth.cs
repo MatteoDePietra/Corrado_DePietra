@@ -20,12 +20,11 @@ public class PlayerHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (((Input.GetKeyUp(KeyCode.Escape)) && (Time.timeScale == 1)) || (life == 0))
+        if ((Input.GetKeyUp(KeyCode.Escape)) && (Time.timeScale == 1))
             Time.timeScale = 0;
         else if ((Input.GetKeyUp(KeyCode.Escape)) && (Time.timeScale == 0))
             Time.timeScale = 1;
-        if ((life == 0) && (Input.GetKeyUp(KeyCode.Escape)))
-            Application.LoadLevel(0);
+        HealthCheck();
     }
 
     public void Damage(float damage)
@@ -41,5 +40,15 @@ public class PlayerHealth : MonoBehaviour
         playerMovement.moveSpeed = 0f;
         yield return new WaitForSecondsRealtime(.3f);
         playerMovement.moveSpeed = 1.2f;
+    }
+
+    private void HealthCheck()
+    {
+        if (life == 0)
+        {
+            Time.timeScale = 0;
+            if (Input.GetKeyUp(KeyCode.Escape))
+                Application.LoadLevel(0);
+        }
     }
 }

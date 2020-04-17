@@ -34,8 +34,6 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField]
     private float AttackRadius = .6f;
 
-
-
     void Start()                                                                // Start is called before the first frame update
     {
         body = GetComponent<Rigidbody2D>();
