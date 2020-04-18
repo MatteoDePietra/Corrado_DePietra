@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -10,14 +8,12 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField]
     private float life = 5;
     
-    // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if ((Input.GetKeyUp(KeyCode.Escape)) && (Time.timeScale == 1))
@@ -39,7 +35,7 @@ public class PlayerHealth : MonoBehaviour
     {
         playerMovement.moveSpeed = 0f;
         yield return new WaitForSecondsRealtime(.3f);
-        playerMovement.moveSpeed = 1.2f;
+        playerMovement.moveSpeed = 1.5f;
     }
 
     private void HealthCheck()

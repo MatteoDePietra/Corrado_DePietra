@@ -1,17 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     Rigidbody2D body;
     Animator animator;
 
-    [SerializeField]
-    public float moveSpeed = 1.2f;
-    [SerializeField]
+    public float moveSpeed = 1.5f;
     public float moveCoin = 1f;                                                 // If Coin velocity, moveCoin = 2;
-    [SerializeField]
     public bool moveMirror = false;                                             // If Coin mirror, velocity = -1;
     [SerializeField]
     public float timer = 10f;
@@ -33,7 +28,6 @@ public class PlayerMovement : MonoBehaviour
     {
         h = Input.GetAxisRaw("Horizontal");                                  
         Vector2 velocity;                                                       // local var
-
         if (moveMirror)
         {
             velocity = new Vector2(Vector2.right.x * moveSpeed * moveCoin * -h, body.velocity.y);
@@ -42,9 +36,7 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity = new Vector2(Vector2.right.x * moveSpeed * moveCoin * h, body.velocity.y);
         }
-
         body.velocity = velocity;
-        
     }
 
     void animationMovement()

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerJump : MonoBehaviour
 {
@@ -33,7 +31,6 @@ public class PlayerJump : MonoBehaviour
     private void CheckGround()
     {
         float distance = 0.03f;
-
         if (Physics2D.Raycast(transform.position, Vector2.down, distance, layer) && (jump!=0))
         {
             jump = 0;

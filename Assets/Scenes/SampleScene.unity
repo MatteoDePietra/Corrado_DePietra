@@ -2317,12 +2317,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   background:
-  - {fileID: 1460591906}
-  - {fileID: 854663349}
-  - {fileID: 622278947}
-  - {fileID: 976507037}
   - {fileID: 1132531254}
-  - {fileID: 541827447}
+  - {fileID: 976507037}
+  - {fileID: 622278947}
+  - {fileID: 854663349}
+  - {fileID: 1460591906}
+  myst: {fileID: 541827447}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -3584,7 +3584,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 652270033}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.6338205, y: -0.88953453, z: 0}
+  m_LocalPosition: {x: 2.6338205, y: -0.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -6370,7 +6370,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1069028570}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 4.5, z: -4.9491124}
+  m_LocalPosition: {x: 1, y: 4.5, z: -4.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1460591906}
@@ -9399,7 +9399,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1626221968}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.09, y: -0.91597605, z: 0}
+  m_LocalPosition: {x: 7.09, y: -0.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -10521,7 +10521,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1832463908}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.46, y: -0.90999997, z: 0}
+  m_LocalPosition: {x: 6.46, y: -0.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -10629,7 +10629,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1836183565}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.55, y: -0.90999997, z: 0}
+  m_LocalPosition: {x: 4.55, y: -0.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -11644,7 +11644,7 @@ PrefabInstance:
     - target: {fileID: 6141238985131609355, guid: 85a339e4ebe7b4330ac61062129a73b4,
         type: 3}
       propertyPath: moveSpeed
-      value: 1.2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6141238985131609356, guid: 85a339e4ebe7b4330ac61062129a73b4,
         type: 3}

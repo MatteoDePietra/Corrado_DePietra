@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -15,7 +13,6 @@ public class PlayerAttack : MonoBehaviour
     private bool Attacked;
     private float AttackRadius = .3f;
 
-    // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -23,7 +20,6 @@ public class PlayerAttack : MonoBehaviour
         Attacked = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         AttackAnimation();
