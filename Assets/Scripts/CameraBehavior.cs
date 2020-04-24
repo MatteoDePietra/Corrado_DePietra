@@ -37,8 +37,8 @@ public class CameraBehavior : MonoBehaviour
     private void FixedUpdate()
     {
         FollowTarget();
-        ParallaxCamera();
-        MystMovement();
+        ParallaxBackground();
+        MystBackground();
     }
 
     private void FollowTarget()
@@ -47,7 +47,7 @@ public class CameraBehavior : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, desiredPosition, targetSmooth);
     }
 
-    private void ParallaxCamera()
+    private void ParallaxBackground()
     {
         for (int i = 0; i < background.Length; i++)
         {
@@ -59,7 +59,7 @@ public class CameraBehavior : MonoBehaviour
         previousCamPos = transform.position;
     }
 
-    private void MystMovement()
+    private void MystBackground()
     {
         Vector3 desiredPosition = myst.position + mystOffset;
         myst.position = Vector3.Lerp(myst.position, desiredPosition, mystSmooth);
