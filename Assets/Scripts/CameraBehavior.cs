@@ -9,9 +9,9 @@ public class CameraBehavior : MonoBehaviour
     private Vector3 targetOffset;
 
     [SerializeField]
-    private Transform[] background = null;
+    private Transform[] backgrounds = null;
     private float[] parallaxScale;
-    private float parallaxsmooth = 5f;
+    private float parallaxsmooth = 2f;
     private Vector3 previousCamPos;
 
     [SerializeField]
@@ -22,13 +22,14 @@ public class CameraBehavior : MonoBehaviour
     private void Start()
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;
-        targetOffset = new Vector3(0, 1, -10);
+        targetOffset = new Vector3(0, .5f, -10);
 
         previousCamPos = transform.position;
-        parallaxScale = new float[background.Length];
-        for (int i = 0; i < background.Length; i++)
+        parallaxScale = new float[backgrounds.Length];
+        for (int i = 0; i < backgrounds.Length; i++)
         {
-            parallaxScale[i] = background[i].position.z - 1;
+            parallaxScale[i] = (backgrounds[i].position.z - 1f)/5;
+            Debug.Log(i + ": " + parallaxScale[i]);
         }
 
         mystOffset = new Vector3(.1f, 0, 0);
@@ -49,12 +50,12 @@ public class CameraBehavior : MonoBehaviour
 
     private void ParallaxBackground()
     {
-        for (int i = 0; i < background.Length; i++)
+        for (int i = 0; i < backgrounds.Length; i++)
         {
             float parallax = (previousCamPos.x - transform.position.x) * parallaxScale[i];
-            float backgroundTargetPosX = background[i].position.x + parallax;
-            Vector3 backgroudTargetPos = new Vector3(backgroundTargetPosX, background[i].position.y, background[i].position.z);
-            background[i].position = Vector3.Lerp(background[i].position, backgroudTargetPos, parallaxsmooth);
+            float backgroundTargetPosX = backgrounds[i].position.x + parallax;
+            Vector3 backgroudTargetPos = new Vector3(backgroundTargetPosX, backgrounds[i].position.y, backgrounds[i].position.z);
+            backgrounds[i].position = Vector3.Lerp(backgrounds[i].position, backgroudTargetPos, parallaxsmooth);
         }
         previousCamPos = transform.position;
     }

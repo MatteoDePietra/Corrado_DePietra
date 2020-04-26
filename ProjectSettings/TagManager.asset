@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Coin1
   - Enemy
+  - Background
   layers:
   - Default
   - TransparentFX
