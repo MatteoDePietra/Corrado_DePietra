@@ -30,9 +30,10 @@ public class PlayerJump : MonoBehaviour
     // Check if player is on the ground
     private void CheckGround()
     {
-        float distance = 0.03f;
+        float distance = 0.01f;
         if (Physics2D.Raycast(transform.position, Vector2.down, distance, layer) && (jump!=0))
         {
+            Debug.Log("a terra!");
             jump = 0;
             animator.SetBool("IsJumping", false);
             animator.SetBool("IsHighJumping", false);

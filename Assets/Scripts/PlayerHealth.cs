@@ -40,7 +40,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void HealthCheck()
     {
-        if (life == 0)
+        if (life <= 0)
         {
             Time.timeScale = 0;
             if (Input.GetKeyUp(KeyCode.Escape))

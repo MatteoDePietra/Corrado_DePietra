@@ -30,7 +30,7 @@ public class EnemyHealth : MonoBehaviour
 
     private void HealthCheck()
     {
-        if (life == 0)
+        if (life <= 0)
             gameObject.SetActive(false);
     }
 }

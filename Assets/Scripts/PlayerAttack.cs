@@ -48,7 +48,7 @@ public class PlayerAttack : MonoBehaviour
             {
                 animator.SetBool("Attack_Run", true);
             }
-            else if (((currentClipInfo[0].clip.name.Equals("Attack_Player")) || (currentClipInfo[0].clip.name.Equals("Attack_Walk")) || (currentClipInfo[0].clip.name.Equals("Attack_Run"))) && (clipNormalizedTime > 0.85))
+            else if ((currentClipInfo[0].clip.name.Equals("Attack_Player")) && (clipNormalizedTime > 0.85))
             {
                 animator.SetBool("Attack_Extra", true);
             }

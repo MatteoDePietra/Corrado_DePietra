@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ItemCollision : MonoBehaviour
 {
-    void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (gameObject.name=="Coin1")
+        if (other.name=="Coin1")
         {
             gameObject.SetActive(false);
         }
