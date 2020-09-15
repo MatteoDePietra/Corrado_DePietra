@@ -13,7 +13,8 @@ public class EnemyBehavior : MonoBehaviour
     Vector2 actualPosition;
     Vector2 playerPosition;
 
-    private float movementSpeed = 0.5f;                                         ////////////////////
+    private bool FacingRight = true;                                            ////////////////////
+    private float movementSpeed = 0.5f;                                         //
     private float movementTime = 2f;                                            //
     private float restTime = 3f;                                                //
     private float dangerDistance = 2.5f;                                        //
@@ -140,13 +141,13 @@ public class EnemyBehavior : MonoBehaviour
 
     private void MovementAnimation ()                                              // Start animation
     {
-        if (h < 0)
+        if ((h < 0) && FacingRight)
         {
-            body.transform.localScale = new Vector3(-1, 1, 1);
+            Flip();
         }
-        else if (h > 0)
+        else if ((h > 0) && !FacingRight)
         {
-            body.transform.localScale = new Vector3(1, 1, 1);
+            Flip();
         }
 
         if (h != 0)
@@ -155,6 +156,13 @@ public class EnemyBehavior : MonoBehaviour
             animator.SetBool("Walk", true);
         }
         else animator.SetBool("Walk", false);
+    }
+
+    private void Flip()
+    {
+        FacingRight = !FacingRight;
+        body.transform.Rotate(0f, 180f, 0f);
+
     }
 
     private void AttackAnimation()

@@ -8,7 +8,7 @@ public class ItemCollision : MonoBehaviour
     {
         if (other.name=="Coin1")
         {
-            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
     }
 }

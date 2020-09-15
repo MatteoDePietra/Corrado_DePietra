@@ -13,14 +13,14 @@ public class PlayerAttack : MonoBehaviour
     private bool Attacked;
     private float AttackRadius = .3f;
 
-    void Start()
+    private void Start()
     {
         animator = GetComponent<Animator>();
         enemyLayer = LayerMask.GetMask("Enemy");
         Attacked = false;
     }
 
-    void Update()
+    private void Update()
     {
         AttackAnimation();
     }

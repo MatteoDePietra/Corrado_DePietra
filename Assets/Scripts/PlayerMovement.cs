@@ -1,21 +1,34 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     Rigidbody2D body;
     Animator animator;
 
+    [SerializeField]
+    AudioManager audioManager;
+    Vector2 velocity;                                                           
+
+    private bool FacingRight = true;
     public float moveSpeed = 1.5f;
-    public float moveCoin = 1f;                                                 // If Coin velocity, moveCoin = 2;
-    public bool moveMirror = false;                                             // If Coin mirror, velocity = -1;
+    //public float moveCoin = 1f;                                                 // If Coin velocity, moveCoin = 2;
+    //public bool moveMirror = false;                                             // If Coin mirror, velocity = -1;
     [SerializeField]
     public float timer = 10f;
-    private float h;
+    public float h;
 
     void Start()                                                                // Start is called before the first frame update
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        audioManager = AudioManager.instance;
+        StartCoroutine(Footstep());
+        if (audioManager == null)
+        {
+            Debug.LogError("AudioManager non trovato");
+        }
     }
                                                                                 
     void Update()                                                               // Update is called once per frame
@@ -26,38 +39,46 @@ public class PlayerMovement : MonoBehaviour
 
     void Movement()
     {
-        h = Input.GetAxisRaw("Horizontal");                                  
-        Vector2 velocity;                                                       // local var
-        if (moveMirror)
+        h = Input.GetAxisRaw("Horizontal");
+
+        /*if (moveMirror)
         {
-            velocity = new Vector2(Vector2.right.x * moveSpeed * moveCoin * -h, body.velocity.y);
+            velocity = new Vector2(Vector2.right.x * moveSpeed * -h, body.velocity.y);
         }
         else
         {
-            velocity = new Vector2(Vector2.right.x * moveSpeed * moveCoin * h, body.velocity.y);
-        }
+        }*/
+
+        velocity = new Vector2(Vector2.right.x * moveSpeed * h, body.velocity.y);
         body.velocity = velocity;
     }
 
     void animationMovement()
     {
-        if (body.velocity.x < 0)
+        if ((velocity.x < 0) && FacingRight)
         {
-            body.transform.localScale = new Vector3(-1, 1, 1);
-            animator.SetBool("IsWalking", true);
+            Flip();
         }
-        else if (body.velocity.x > 0)
+        else if ((velocity.x > 0) && !FacingRight)
         {
-            body.transform.localScale = new Vector3(1, 1, 1);
-            animator.SetBool("IsWalking", true);
+            Flip();
         }
-        else if ((body.velocity.x == 0) && (body.velocity.y == 0) && (timer > 0))
+        else if ((velocity.x != 0) && (velocity.y == 0))
+        {
+            animator.SetBool("IsWalking", true);
+            timer = 10f;
+            animator.SetBool("IsStill", false);
+        }
+        else if (velocity.y != 0)
+        {
+            animator.SetBool("IsWalking", false);
+        }
+        else if ((velocity.x == 0) && (velocity.y == 0) && (timer > 0))
         {
             timer -= Time.deltaTime;
             animator.SetBool("IsWalking", false);
         }
-
-        if ((body.velocity.x != 0) || (body.velocity.y != 0) || (animator.GetBool("Attack_Player")) || (animator.GetBool("Damage")))
+        if ((velocity.y != 0) || (animator.GetBool("Attack_Player")) || (animator.GetBool("Damage")))
         {
             timer = 10f;
             animator.SetBool("IsStill", false);
@@ -68,13 +89,38 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("IsStill", true);
         }
 
-        if (moveCoin > 1f)                                                      // If the player has take Coin velocity, animation Run
+        /*if (moveCoin > 1f)                                                      // If the player has take Coin velocity, animation Run
         {
             animator.SetBool("IsRunning", true);
         }
         else
         {
             animator.SetBool("IsRunning", false);
+        }*/
+    }
+
+    private void Flip()
+    {
+        FacingRight = !FacingRight;
+        body.transform.Rotate(0f, 180f, 0f);
+    }
+
+    private IEnumerator Footstep()
+    {
+        //float x;
+        for( ; ; )
+        {
+            //x = Input.GetAxisRaw("Horizontal");
+            if ((velocity.x != 0) && (velocity.y == 0))
+            {
+                audioManager.PlaySound("Footstep");
+                yield return new WaitForSeconds(.563f);
+            }
+            else if ((velocity.x == 0) || (velocity.y !=0))
+            {
+                audioManager.StopSound("Footstep");
+                yield return new WaitForSeconds(.05f);
+            }
         }
     }
 }

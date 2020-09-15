@@ -5,6 +5,7 @@ public class PlayerJump : MonoBehaviour
     Rigidbody2D body;
     LayerMask layer;
     Animator animator;
+    AudioManager audioManager;
 
     [SerializeField]
     public static float jumpForce = 0.4f;
@@ -18,6 +19,11 @@ public class PlayerJump : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         layer = LayerMask.GetMask("Tilemap");
         animator = GetComponent<Animator>();
+        audioManager = AudioManager.instance;
+        if (audioManager == null)
+        {
+            Debug.LogError("AudioManager non trovato");
+        }
     }
 
     // Update is called once per frame
@@ -37,6 +43,7 @@ public class PlayerJump : MonoBehaviour
             jump = 0;
             animator.SetBool("IsJumping", false);
             animator.SetBool("IsHighJumping", false);
+            audioManager.PlaySound("Landing");
         }
     }
 
@@ -49,6 +56,7 @@ public class PlayerJump : MonoBehaviour
             body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             jump = 1;
             animator.SetBool("IsJumping", true);
+            audioManager.PlaySound("Jump1");
         }
         else if ((Input.GetKeyDown(KeyCode.Space)) && (jump == 1))
         {
@@ -56,6 +64,7 @@ public class PlayerJump : MonoBehaviour
             body.AddForce(Vector2.up * jumpForce * (float) 1.2, ForceMode2D.Impulse);
             jump = 2;
             animator.SetBool("IsHighJumping", true);
+            audioManager.PlaySound("Jump2");
         }
     }
 }

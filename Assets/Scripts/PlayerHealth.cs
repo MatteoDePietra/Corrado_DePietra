@@ -5,6 +5,8 @@ public class PlayerHealth : MonoBehaviour
 {
     Animator animator;
     PlayerMovement playerMovement;
+    AudioManager audioManager;
+
     [SerializeField]
     private float life = 5;
     
@@ -12,6 +14,11 @@ public class PlayerHealth : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
+        audioManager = AudioManager.instance;
+        if (audioManager == null)
+        {
+            Debug.LogError("AudioManager non trovato");
+        }
     }
 
     void Update()
@@ -29,6 +36,7 @@ public class PlayerHealth : MonoBehaviour
         animator.SetTrigger("Damage");
         StartCoroutine(stopMovement());
         Debug.Log("La vita del giocatore è: " + life);
+        audioManager.PlaySound("Damage");
     }
 
     private IEnumerator stopMovement()
