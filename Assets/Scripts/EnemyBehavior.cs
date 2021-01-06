@@ -7,6 +7,7 @@ public class EnemyBehavior : MonoBehaviour
     Rigidbody2D body;
     Animator animator;
     LayerMask playerLayer;
+    
     [SerializeField]
     private Transform attackPoint = null;
     Vector2 spawnPosition;
@@ -14,7 +15,7 @@ public class EnemyBehavior : MonoBehaviour
     Vector2 playerPosition;
 
     private bool FacingRight = true;                                            ////////////////////
-    private float movementSpeed = 0.5f;                                         //
+    public float movementSpeed = 0.5f;                                         //
     private float movementTime = 2f;                                            //
     private float restTime = 3f;                                                //
     private float dangerDistance = 2.5f;                                        //
@@ -26,7 +27,7 @@ public class EnemyBehavior : MonoBehaviour
     private bool left = true;                                                   //
     private int n = 5;                                                          ////////////////////
 
-    private float damage = 1;                                                   //
+    private int damage = 1;                                                   //
     private bool Attacking;                                                     //
     private bool Attacked;                                                      //
     AnimatorClipInfo[] currentClipInfo;                                         //
@@ -41,43 +42,42 @@ public class EnemyBehavior : MonoBehaviour
         animator = GetComponent<Animator>();
         playerLayer = LayerMask.GetMask("Player");
         timer = restTime;
-        timerAttack = .5f;
+        timerAttack = .2f;
         StartCoroutine(DoCheck());
         spawnPosition = transform.position;
         Attacking = false;
         Attacked = false;
     }
-
     void Update()                                                               // Update is called once per frame
     {
         Path();
-        body.velocity = new Vector2(Vector2.right.x * h * movementSpeed, body.velocity.y);
+        if (!Attacking)
+            body.velocity = new Vector2(Vector2.right.x * h * movementSpeed, body.velocity.y);
+        else 
+            body.velocity = new Vector2(Vector2.right.x * 0 * movementSpeed, body.velocity.y);
         MovementAnimation();
         AttackAnimation();
     }
-
     private IEnumerator DoCheck()                                               // Check all distance 
     {
         for (; ; )
         {
             actualPosition = transform.position;
-            playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
+            if (GameObject.FindGameObjectWithTag("Player") != null)
+                playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
             DistanceCheck();
             DistanceCheck(actualPosition, spawnPosition);
             yield return new WaitForSeconds(.3f);
         }
     }
-
     private float DistanceCheck()                                               // Check distance between player and enemy
     {
         return Mathf.Abs(actualPosition.x - playerPosition.x);
     }
-
     private float DistanceCheck(Vector2 Position1, Vector2 Position2)           // Check distance between 2 position
     {
         return Mathf.Abs(Position1.x - Position2.x);
     }
-
     private void Path()                                                         //  Path design of walking enemy
     {
         if ((DistanceCheck(actualPosition, spawnPosition) >= spawnDistance) && (DistanceCheck(playerPosition, spawnPosition) >= spawnDistance))
@@ -134,12 +134,13 @@ public class EnemyBehavior : MonoBehaviour
         }
         else if ((DistanceCheck() <= attackDistance) && (DistanceCheck(actualPosition, spawnPosition) < spawnDistance))
         {
+            if ((playerPosition.x - actualPosition.x) > 0)
+                h = 2;
+            else h = -2;
             Attacking = true;
-            h = 0;
         }
     }
-
-    private void MovementAnimation ()                                              // Start animation
+    private void MovementAnimation ()                                           // Start animation
     {
         if ((h < 0) && FacingRight)
         {
@@ -150,21 +151,18 @@ public class EnemyBehavior : MonoBehaviour
             Flip();
         }
 
-        if (h != 0)
+        if (this.body.velocity.x != 0)
         {
-            timerAttack = .5f;
+            timerAttack = .2f;
             animator.SetBool("Walk", true);
         }
         else animator.SetBool("Walk", false);
     }
-
     private void Flip()
     {
         FacingRight = !FacingRight;
         body.transform.Rotate(0f, 180f, 0f);
-
     }
-
     private void AttackAnimation()
     {
         currentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
@@ -185,6 +183,8 @@ public class EnemyBehavior : MonoBehaviour
             Attack();
         else if ((clipNormalizedTime >= 1f) || (currentClipInfo[0].clip.name.Equals("Damage")))
         {
+            if ((playerPosition.x - actualPosition.x) > 0)
+                Flip();
             timerAttack = .5f;
             animator.SetBool("Attack", false);
             clipNormalizedTime = 0f;
@@ -193,7 +193,6 @@ public class EnemyBehavior : MonoBehaviour
             Attacking = false;
         }
     }
-
     private void Attack()
     {
         Collider2D[] playerHit = Physics2D.OverlapCircleAll(attackPoint.position, AttackRadius, playerLayer);
@@ -207,7 +206,6 @@ public class EnemyBehavior : MonoBehaviour
             }
         }
     }
-
     private void OnDrawGizmosSelected()
     {
         if (attackPoint == null)

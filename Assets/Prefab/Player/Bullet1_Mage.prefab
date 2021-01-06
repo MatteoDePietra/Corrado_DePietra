@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 4730934731463211236}
   - component: {fileID: -5140328897452218795}
   m_Layer: 12
-  m_Name: Bullet
-  m_TagString: Untagged
+  m_Name: Bullet1_Mage
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -135,3 +135,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3.5
   body: {fileID: 6454402164559434503}
+  damage: 1

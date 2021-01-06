@@ -9,7 +9,7 @@ public class PlayerAttack : MonoBehaviour
     private Transform attackPoint = null;
 
     private float clipNormalizedTime;
-    private float damage = 1;
+    private int damage = 1;
     private bool Attacked;
     private float AttackRadius = .3f;
 
@@ -71,7 +71,7 @@ public class PlayerAttack : MonoBehaviour
     {
         Collider2D[] enemyHit = Physics2D.OverlapCircleAll(attackPoint.position, AttackRadius, enemyLayer);
 
-        foreach(Collider2D enemy in enemyHit)
+        foreach (Collider2D enemy in enemyHit)
         {
             if (!Attacked)
             {

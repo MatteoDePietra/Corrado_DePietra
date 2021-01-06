@@ -12,7 +12,8 @@ public class PlayerMovement : MonoBehaviour
     Vector2 velocity;                                                           
 
     private bool FacingRight = true;
-    public float moveSpeed = 1.5f;
+    [SerializeField]
+    public float moveSpeed = 1.8f;
     //public float moveCoin = 1f;                                                 // If Coin velocity, moveCoin = 2;
     //public bool moveMirror = false;                                             // If Coin mirror, velocity = -1;
     [SerializeField]
@@ -49,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
         {
         }*/
 
-        velocity = new Vector2(Vector2.right.x * moveSpeed * h, body.velocity.y);
+        velocity = new Vector2(Vector2.right.x * moveSpeed * h * Time.timeScale, body.velocity.y);
         body.velocity = velocity;
     }
 

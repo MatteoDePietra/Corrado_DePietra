@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Shooting : MonoBehaviour
 {
@@ -16,15 +14,15 @@ public class Shooting : MonoBehaviour
     AudioManager audioManager;
 
     private float clipNormalizedTime;
-    private bool FirstShot;
-    private bool SecondShot;
+    private bool firstShot;
+    private bool secondShot;
 
 
     private void Start()
     {
         animator = GetComponent<Animator>();
-        FirstShot = false;
-        SecondShot = false;
+        firstShot = false;
+        secondShot = false;
         audioManager = AudioManager.instance;
         if (audioManager == null)
         {
@@ -73,15 +71,15 @@ public class Shooting : MonoBehaviour
         }
         if ((clipNormalizedTime >= .3f) && (clipNormalizedTime < 1f))
         {
-            if (((currentClipInfo[0].clip.name.Equals("Attack_Player")) || (currentClipInfo[0].clip.name.Equals("Attack_Walk")) || (currentClipInfo[0].clip.name.Equals("Attack_Run")))&& !FirstShot)
+            if (((currentClipInfo[0].clip.name.Equals("Attack_Player")) || (currentClipInfo[0].clip.name.Equals("Attack_Walk")) || (currentClipInfo[0].clip.name.Equals("Attack_Run")))&& !firstShot)
             {
                 Shoot(1);
-                FirstShot = true;
+                firstShot = true;
             }
-            else if ((currentClipInfo[0].clip.name.Equals("Attack_Extra")) && !SecondShot)
+            else if ((currentClipInfo[0].clip.name.Equals("Attack_Extra")) && !secondShot)
             {
                 Shoot(2);
-                SecondShot = true;
+                secondShot = true;
             }
 
         }
@@ -92,10 +90,10 @@ public class Shooting : MonoBehaviour
             animator.SetBool("Attack_Run", false);
             animator.SetBool("Attack_Extra", false);
             clipNormalizedTime = 0f;
-            if (FirstShot)
-                FirstShot = !FirstShot;
-            if (SecondShot)
-                SecondShot = !SecondShot;
+            if (firstShot)
+                firstShot = !firstShot;
+            if (secondShot)
+                secondShot = !secondShot;
         }
     }
 

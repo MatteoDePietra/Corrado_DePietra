@@ -9,8 +9,8 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private Rigidbody2D body = null;
     AudioManager audioManager;
-
-    private float damage = 1f;
+    [SerializeField]
+    private int damage;
     private float timer = 1.1f;
 
 
@@ -38,10 +38,19 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log(collision.name);
-        if (collision.CompareTag("Enemy"))
+        if ((collision.CompareTag("Enemy")) && (this.CompareTag("Player")))
+        {
             collision.GetComponent<EnemyHealth>().Damage(damage);
-        speed = 0f;
-        audioManager.PlaySound("Explosion");
-        Destroy(gameObject);
+            speed = 0f;
+            audioManager.PlaySound("Explosion");
+            Destroy(gameObject);
+        }
+        else if ((collision.CompareTag("Player")) && (this.CompareTag("Enemy")))
+        {
+            collision.GetComponent<PlayerHealth>().Damage(damage);
+            speed = 0f;
+            audioManager.PlaySound("Explosion");
+            Destroy(gameObject);
+        }
     }
 }

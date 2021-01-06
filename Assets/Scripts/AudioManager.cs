@@ -7,9 +7,7 @@ public class Sound
 {
     public string name;
     public AudioClip clip;
-
-    private AudioSource source;
-
+    public AudioSource source;
     [Range(0f,1f)]
     public float volume = 0.7f;
     [Range(0.5f, 1.5f)]
@@ -18,7 +16,6 @@ public class Sound
     public float randomVolume = 0.7f;
     [Range(0f, 0.5f)]
     public float randomPitch = 0.5f;
-
     public bool loop = false;
 
     public void SetSource(AudioSource _source)
@@ -45,8 +42,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
 
-    [SerializeField]
-    Sound[] sounds = null;
+    public Sound[] sounds;
 
     private void Awake()
     {
@@ -74,7 +70,14 @@ public class AudioManager : MonoBehaviour
         }
         PlaySound("Music");
     }
-
+    public void SetVolumeSound(float _volume, string _name)
+    {
+        for (int i = 0; i < sounds.Length; i++)
+        {
+            AudioSource _go = this.transform.GetChild(i).GetComponent<AudioSource>();
+            _go.volume = 0.5f * _volume;
+        }
+    }
     public void PlaySound(string _name)
     {
         for (int i = 0; i < sounds.Length; i++)

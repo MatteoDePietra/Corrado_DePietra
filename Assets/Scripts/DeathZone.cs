@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class DeathZone : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log(other.name);
         if (other.gameObject.CompareTag("Enemy"))
             other.gameObject.SetActive(false);
         else if (other.gameObject.CompareTag("Player"))
+        {
             other.gameObject.GetComponent<PlayerHealth>().Damage(5);
+        }
     }
 }

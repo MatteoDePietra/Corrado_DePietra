@@ -17,11 +17,12 @@ public class CameraBehavior : MonoBehaviour
     private Transform myst = null;
     private float mystSmooth = 5f;
     private Vector3 mystOffset;
+    private Vector3 timeOffset;
 
     private void Start()
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;
-
+        Debug.Log(target);
         previousCamPos = transform.position;
         parallaxScale = new float[backgrounds.Length];
         for (int i = 0; i < backgrounds.Length; i++)
@@ -30,6 +31,7 @@ public class CameraBehavior : MonoBehaviour
         }
 
         mystOffset = new Vector3(-.01f, 0, 0);
+        timeOffset = new Vector3(Time.timeScale, 0, 0);
     }
     
     private void LateUpdate()
@@ -64,7 +66,7 @@ public class CameraBehavior : MonoBehaviour
 
     private void MystBackground()
     {
-        Vector3 desiredPosition = myst.position + mystOffset;
+        Vector3 desiredPosition = myst.position + mystOffset*Time.timeScale;
         myst.position = Vector3.Lerp(myst.position, desiredPosition, mystSmooth);
     }
 }

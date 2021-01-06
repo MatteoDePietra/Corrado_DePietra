@@ -1,20 +1,32 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
-    Animator animator;
-    PlayerMovement playerMovement;
-    AudioManager audioManager;
+    private float clipNormalizedTime;
+    private AnimatorClipInfo[] currentClipInfo;
+    public Rigidbody2D body;
+    public Animator animator;
+    public PlayerMovement playerMovement;
+    public AudioManager audioManager;
+    public HealthBar healthBar; 
+    public MainMenu mainMenu;
+    private bool alive;
 
     [SerializeField]
-    private float life = 5;
-    
+    private int maxHealth;
+    private int currentHealth;
+
     void Start()
     {
+        body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
         audioManager = AudioManager.instance;
+        currentHealth = maxHealth = 5;
+        alive = true;
+        healthBar.SetMaxHealth(maxHealth);
         if (audioManager == null)
         {
             Debug.LogError("AudioManager non trovato");
@@ -23,36 +35,61 @@ public class PlayerHealth : MonoBehaviour
 
     void Update()
     {
-        if ((Input.GetKeyUp(KeyCode.Escape)) && (Time.timeScale == 1))
-            Time.timeScale = 0;
-        else if ((Input.GetKeyUp(KeyCode.Escape)) && (Time.timeScale == 0))
-            Time.timeScale = 1;
+        if (mainMenu == null)
+        {
+            GameObject go = GameObject.Find("Menu");
+            mainMenu = go.GetComponent<MainMenu>();
+        }
+
+        currentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
+        if (currentClipInfo[0].clip.name.Equals("Death"))
+        {
+            clipNormalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        }
+        
         HealthCheck();
     }
 
-    public void Damage(float damage)
+    public void Damage(int damage)
     {
-        life -= damage;
-        animator.SetTrigger("Damage");
-        StartCoroutine(stopMovement());
-        Debug.Log("La vita del giocatore è: " + life);
-        audioManager.PlaySound("Damage");
+        if (currentHealth > 0)
+        {
+            currentHealth -= damage;
+            healthBar.SetHealth(currentHealth);
+            animator.SetTrigger("Damage");
+            StartCoroutine(stopMovement());
+            audioManager.PlaySound("Damage");
+        }
     }
 
     private IEnumerator stopMovement()
     {
         playerMovement.moveSpeed = 0f;
         yield return new WaitForSecondsRealtime(.3f);
-        playerMovement.moveSpeed = 1.5f;
+        playerMovement.moveSpeed = 1.8f;
     }
 
     private void HealthCheck()
     {
-        if (life <= 0)
+        if ((currentHealth <= 0) && (alive))
         {
-            Time.timeScale = 0;
-            if (Input.GetKeyUp(KeyCode.Escape))
-                Application.LoadLevel(0);
+            StartCoroutine(Death());
         }
+    }
+
+    private IEnumerator Death()
+    {
+        alive = false;
+        animator.SetTrigger("Death");
+        playerMovement.moveSpeed = 0f;
+        body.velocity = new Vector2(0, 0);
+        body.bodyType = RigidbodyType2D.Kinematic;
+        clipNormalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+
+        yield return new WaitUntil(() => (currentClipInfo[0].clip.name.Equals("Death")) && (clipNormalizedTime > 1));
+
+        Time.timeScale = 0f;
+        gameObject.SetActive(false);
+        mainMenu.GameOver();
     }
 }
