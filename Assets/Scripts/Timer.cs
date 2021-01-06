@@ -12,9 +12,9 @@
      void FixedUpdate()
      {
         float TimerControl = Time.time - StartTime;
-        string mins = ((int)TimerControl/60).ToString("00");
-        string segs = (TimerControl % 60).ToString("00");
-        string milisegs = ((TimerControl * 100)%100).ToString ("00");
+        string mins = ((int)TimerControl/59).ToString("00");
+        string segs = (TimerControl % 59).ToString("00");
+        string milisegs = ((TimerControl * 99)%99).ToString ("00");
             
         string TimerString = string.Format ("{00}:{01}:{02}", mins, segs, milisegs);
             
