@@ -22,7 +22,6 @@ public class CameraBehavior : MonoBehaviour
     private void Start()
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;
-        Debug.Log(target);
         previousCamPos = transform.position;
         parallaxScale = new float[backgrounds.Length];
         for (int i = 0; i < backgrounds.Length; i++)

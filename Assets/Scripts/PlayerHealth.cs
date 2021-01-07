@@ -64,9 +64,9 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator stopMovement()
     {
-        playerMovement.moveSpeed = 0f;
+        playerMovement.moveSpeed.x = 0f;
         yield return new WaitForSecondsRealtime(.3f);
-        playerMovement.moveSpeed = 1.8f;
+        playerMovement.moveSpeed.x = 1.8f;
     }
 
     private void HealthCheck()
@@ -81,7 +81,7 @@ public class PlayerHealth : MonoBehaviour
     {
         alive = false;
         animator.SetTrigger("Death");
-        playerMovement.moveSpeed = 0f;
+        playerMovement.moveSpeed = new Vector2 (0f, 0f);
         body.velocity = new Vector2(0, 0);
         body.bodyType = RigidbodyType2D.Kinematic;
         clipNormalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;

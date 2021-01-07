@@ -35,19 +35,19 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log(collision.name);
-        if ((collision.CompareTag("Enemy")) && (this.CompareTag("Player")))
+        Debug.Log(other.name);
+        if ((other.CompareTag("Enemy")) && (this.CompareTag("Player")))
         {
-            collision.GetComponent<EnemyHealth>().Damage(damage);
+            other.GetComponent<EnemyHealth>().Damage(damage);
             speed = 0f;
             audioManager.PlaySound("Explosion");
             Destroy(gameObject);
         }
-        else if ((collision.CompareTag("Player")) && (this.CompareTag("Enemy")))
+        else if ((other.CompareTag("Player")) && (this.CompareTag("Enemy")))
         {
-            collision.GetComponent<PlayerHealth>().Damage(damage);
+            other.GetComponent<PlayerHealth>().Damage(damage);
             speed = 0f;
             audioManager.PlaySound("Explosion");
             Destroy(gameObject);

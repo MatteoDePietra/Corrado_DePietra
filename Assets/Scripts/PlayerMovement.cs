@@ -4,26 +4,33 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    Rigidbody2D body;
-    Animator animator;
+    private Rigidbody2D body;
+    private Animator animator;
 
     [SerializeField]
-    AudioManager audioManager;
-    Vector2 velocity;                                                           
+    private AudioManager audioManager;
+    private Vector2 velocity;                                                           
 
     private bool FacingRight = true;
     [SerializeField]
-    public float moveSpeed = 1.8f;
+    public Vector2 moveSpeed;
     //public float moveCoin = 1f;                                                 // If Coin velocity, moveCoin = 2;
     //public bool moveMirror = false;                                             // If Coin mirror, velocity = -1;
     [SerializeField]
     public float timer = 10f;
-    public float h;
+    private float h;
+    private float j;
+    public float distance;
+    [SerializeField]
+    private LayerMask stairsLayer;
+    private bool isClimbing;
+
 
     void Start()                                                                // Start is called before the first frame update
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        moveSpeed = new Vector2(1.8f, 1.2f);
         audioManager = AudioManager.instance;
         StartCoroutine(Footstep());
         if (audioManager == null)
@@ -38,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
         animationMovement();
     }
 
-    void Movement()
+    private void Movement()
     {
         h = Input.GetAxisRaw("Horizontal");
 
@@ -50,36 +57,59 @@ public class PlayerMovement : MonoBehaviour
         {
         }*/
 
-        velocity = new Vector2(Vector2.right.x * moveSpeed * h * Time.timeScale, body.velocity.y);
-        body.velocity = velocity;
+        body.velocity = new Vector2(Vector2.right.x * moveSpeed.x * h * Time.timeScale, body.velocity.y);
+        
+        RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.up, distance, stairsLayer);
+        
+        if (hitInfo.collider != null)
+        {
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+                isClimbing = true;
+        }
+        else 
+        {
+            if ((Input.GetKeyDown(KeyCode.LeftArrow)) || (Input.GetKeyDown(KeyCode.RightArrow)))
+                isClimbing = false;
+        }
+
+        if ((isClimbing) && (hitInfo.collider != null))
+        {
+            j = Input.GetAxisRaw("Vertical");
+            body.velocity = new Vector2(body.velocity.x, Vector2.up.y * moveSpeed.y * j * Time.timeScale);
+            body.gravityScale = 0;
+        }
+        else
+        {
+            body.gravityScale = 1;
+        }
     }
 
-    void animationMovement()
+    private void animationMovement()
     {
-        if ((velocity.x < 0) && FacingRight)
+        if ((body.velocity.x < 0) && FacingRight)
         {
             Flip();
         }
-        else if ((velocity.x > 0) && !FacingRight)
+        else if ((body.velocity.x > 0) && !FacingRight)
         {
             Flip();
         }
-        else if ((velocity.x != 0) && (velocity.y == 0))
+        else if ((body.velocity.x != 0) && (body.velocity.y == 0))
         {
             animator.SetBool("IsWalking", true);
             timer = 10f;
             animator.SetBool("IsStill", false);
         }
-        else if (velocity.y != 0)
+        else if (body.velocity.y != 0)
         {
             animator.SetBool("IsWalking", false);
         }
-        else if ((velocity.x == 0) && (velocity.y == 0) && (timer > 0))
+        else if ((body.velocity.x == 0) && (body.velocity.y == 0) && (timer > 0))
         {
             timer -= Time.deltaTime;
             animator.SetBool("IsWalking", false);
         }
-        if ((velocity.y != 0) || (animator.GetBool("Attack_Player")) || (animator.GetBool("Damage")))
+        if ((body.velocity.y != 0) || (animator.GetBool("Attack_Player")) || (animator.GetBool("Damage")))
         {
             timer = 10f;
             animator.SetBool("IsStill", false);
@@ -112,16 +142,41 @@ public class PlayerMovement : MonoBehaviour
         for( ; ; )
         {
             //x = Input.GetAxisRaw("Horizontal");
-            if ((velocity.x != 0) && (velocity.y == 0))
+            if ((body.velocity.x != 0) && (body.velocity.y == 0))
             {
                 audioManager.PlaySound("Footstep");
                 yield return new WaitForSeconds(.563f);
             }
-            else if ((velocity.x == 0) || (velocity.y !=0))
+            else if ((body.velocity.x == 0) || (body.velocity.y !=0))
             {
                 audioManager.StopSound("Footstep");
                 yield return new WaitForSeconds(.05f);
             }
         }
     }
+
+    /*void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log("collision trigger");
+        if (other.CompareTag("Stairs"))
+        {
+            Debug.Log("scaleeeeee");
+            velocity = new Vector2(Vector2.right.x * moveSpeed.x * h * Time.timeScale, Vector2.up.y * moveSpeed.y * j * Time.timeScale);
+            body.velocity = velocity;
+
+            j = Input.GetAxisRaw("Vertical");
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Stairs"))
+        {
+            Debug.Log("non scaleeeeee");
+
+            velocity = new Vector2(Vector2.right.x * moveSpeed.x * h * Time.timeScale, body.velocity.y);
+            body.velocity = velocity;
+            j = 0;
+        }
+    }*/
 }
