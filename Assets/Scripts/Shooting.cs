@@ -104,4 +104,5 @@ public class Shooting : MonoBehaviour
         else if (bulletNumber == 2)
             Instantiate(bullet2, firePoint.position, firePoint.rotation);
     }
+    
 }
