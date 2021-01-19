@@ -6,7 +6,7 @@ public class ItemCollision : MonoBehaviour
 {
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.name=="Coin1")
+        if (other.CompareTag("Player"))
         {
             Destroy(gameObject);
         }
