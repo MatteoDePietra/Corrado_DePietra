@@ -88,6 +88,7 @@ public class PlayerHealth : MonoBehaviour
 
         yield return new WaitUntil(() => (currentClipInfo[0].clip.name.Equals("Death")) && (clipNormalizedTime > 1));
 
+        CoinCounter.CoinReset();
         Time.timeScale = 0f;
         gameObject.SetActive(false);
         mainMenu.GameOver();
