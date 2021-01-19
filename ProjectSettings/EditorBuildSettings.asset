@@ -12,5 +12,5 @@ EditorBuildSettings:
     path: Assets/Scenes/CoreGame.unity
     guid: 4ce34dba58f13413ba848fa5dcba3e4d
   m_configObjects:
-    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 5ec9b0c8e825f4b299862138b64e835d,
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 973db68e9ba31d74c8446b1d36e1f3fb,
       type: 2}
