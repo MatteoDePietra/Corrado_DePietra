@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
@@ -12,8 +10,6 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private int damage;
     private float timer = 1.1f;
-
-
     private void Start()
     {
         body.velocity = transform.right * speed;
@@ -23,7 +19,6 @@ public class Bullet : MonoBehaviour
             Debug.LogError("AudioManager non trovato");
         }
     }
-
     private void Update()
     {
         timer -= Time.deltaTime;
@@ -34,7 +29,6 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log(other.name);

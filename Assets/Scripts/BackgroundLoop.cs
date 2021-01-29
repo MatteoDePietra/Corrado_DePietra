@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BackgroundLoop : MonoBehaviour
 {
@@ -17,7 +15,6 @@ public class BackgroundLoop : MonoBehaviour
             loadChildObjects(obj);
         }
     }
-  
     void loadChildObjects(GameObject obj)
     {
         float objectWidth = obj.GetComponent<SpriteRenderer>().bounds.size.x;
@@ -33,7 +30,6 @@ public class BackgroundLoop : MonoBehaviour
         Destroy(clone);
         Destroy(obj.GetComponent<SpriteRenderer>());
     }
-  
     void repositionChildObjects(GameObject obj)
     {
         Transform[] children = obj.GetComponentsInChildren<Transform>();
@@ -54,7 +50,6 @@ public class BackgroundLoop : MonoBehaviour
             }
         }
     }
-
     void LateUpdate()
     {
         foreach (GameObject obj in levels)

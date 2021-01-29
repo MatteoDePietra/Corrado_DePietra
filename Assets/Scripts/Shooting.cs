@@ -16,8 +16,6 @@ public class Shooting : MonoBehaviour
     private float clipNormalizedTime;
     private bool firstShot;
     private bool secondShot;
-
-
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -29,12 +27,10 @@ public class Shooting : MonoBehaviour
             Debug.LogError("AudioManager non trovato");
         }
     }
-
     private void Update()
     {
         AttackAnimation();
     }
-
     private void AttackAnimation()
     {
         currentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
@@ -96,7 +92,6 @@ public class Shooting : MonoBehaviour
                 secondShot = !secondShot;
         }
     }
-
     private void Shoot(int bulletNumber)
     {
         if (bulletNumber == 1)
@@ -104,5 +99,4 @@ public class Shooting : MonoBehaviour
         else if (bulletNumber == 2)
             Instantiate(bullet2, firePoint.position, firePoint.rotation);
     }
-    
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -32,7 +31,6 @@ public class PlayerHealth : MonoBehaviour
             Debug.LogError("AudioManager non trovato");
         }
     }
-
     void Update()
     {
         if (mainMenu == null)
@@ -49,7 +47,6 @@ public class PlayerHealth : MonoBehaviour
         
         HealthCheck();
     }
-
     public void Damage(int damage)
     {
         if (currentHealth > 0)
@@ -61,14 +58,12 @@ public class PlayerHealth : MonoBehaviour
             audioManager.PlaySound("Damage");
         }
     }
-
     private IEnumerator stopMovement()
     {
         playerMovement.moveSpeed.x = 0f;
         yield return new WaitForSecondsRealtime(.3f);
         playerMovement.moveSpeed.x = 1.8f;
     }
-
     private void HealthCheck()
     {
         if ((currentHealth <= 0) && (alive))
@@ -76,7 +71,6 @@ public class PlayerHealth : MonoBehaviour
             StartCoroutine(Death());
         }
     }
-
     private IEnumerator Death()
     {
         alive = false;

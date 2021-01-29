@@ -10,11 +10,7 @@ public class PlayerJump : MonoBehaviour
 
     [SerializeField]
     public static float jumpForce = 0.45f;
-
-    // Var for jumps
     private byte jump = 0;
-
-    // Start is called before the first frame update
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
@@ -27,8 +23,6 @@ public class PlayerJump : MonoBehaviour
             Debug.LogError("AudioManager non trovato");
         }
     }
-
-    // Update is called once per frame
     void Update()
     {
         Jumping();
@@ -43,9 +37,8 @@ public class PlayerJump : MonoBehaviour
             jump = 1;
         }
     }
-
-    private bool IsGrounded() {
-
+    private bool IsGrounded() 
+    {
         float extraHeightText = .1f;
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0f, Vector2.down, extraHeightText, layer);
 
@@ -65,8 +58,6 @@ public class PlayerJump : MonoBehaviour
 
         return raycastHit.collider != null;
     }
-
-    // Control multiple jump
     private void Jumping()
     {
         if ((Input.GetKeyDown(KeyCode.Space)) && (jump  == 0) && IsGrounded())

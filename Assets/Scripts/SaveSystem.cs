@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -17,7 +15,6 @@ public static class SaveSystem
         formatter.Serialize(stream, data);
         stream.Close();
     }
-
     public static Data Load()
     {
         string path = Application.persistentDataPath + "/save.fun";

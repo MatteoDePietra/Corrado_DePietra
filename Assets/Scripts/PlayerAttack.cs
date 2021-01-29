@@ -12,19 +12,16 @@ public class PlayerAttack : MonoBehaviour
     private int damage = 1;
     private bool Attacked;
     private float AttackRadius = .3f;
-
     private void Start()
     {
         animator = GetComponent<Animator>();
         enemyLayer = LayerMask.GetMask("Enemy");
         Attacked = false;
     }
-
     private void Update()
     {
         AttackAnimation();
     }
-
     private void AttackAnimation()
     {
         currentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
@@ -80,7 +77,6 @@ public class PlayerAttack : MonoBehaviour
             }
         }
     }
-
     private void OnDrawGizmosSelected()
     {
         if (attackPoint == null)

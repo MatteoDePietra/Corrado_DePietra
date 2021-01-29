@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -15,7 +14,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     public Vector2 moveSpeed;
     //public float moveCoin = 1f;                                                 // If Coin velocity, moveCoin = 2;
-    //public bool moveMirror = false;                                             // If Coin mirror, velocity = -1;
     [SerializeField]
     public float timer = 10f;
     private float h;
@@ -154,29 +152,4 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-
-    /*void OnTriggerEnter2D(Collider2D other)
-    {
-        Debug.Log("collision trigger");
-        if (other.CompareTag("Stairs"))
-        {
-            Debug.Log("scaleeeeee");
-            velocity = new Vector2(Vector2.right.x * moveSpeed.x * h * Time.timeScale, Vector2.up.y * moveSpeed.y * j * Time.timeScale);
-            body.velocity = velocity;
-
-            j = Input.GetAxisRaw("Vertical");
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Stairs"))
-        {
-            Debug.Log("non scaleeeeee");
-
-            velocity = new Vector2(Vector2.right.x * moveSpeed.x * h * Time.timeScale, body.velocity.y);
-            body.velocity = velocity;
-            j = 0;
-        }
-    }*/
 }

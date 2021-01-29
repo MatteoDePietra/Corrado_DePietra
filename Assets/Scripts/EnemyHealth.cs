@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
@@ -30,7 +29,6 @@ public class EnemyHealth : MonoBehaviour
         currentHealth = maxHealth;
         //healthBar.SetMaxHealth(maxHealth);
     }
-
     void Update()
     {
         currentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
@@ -52,7 +50,6 @@ public class EnemyHealth : MonoBehaviour
             StartCoroutine(stopMovement());
         }
     }
-
     private IEnumerator stopMovement()
     {
         if (!shooting)
@@ -65,7 +62,6 @@ public class EnemyHealth : MonoBehaviour
         else
             enemyShooting.movementSpeed = .5f;
     }
-
     private void HealthCheck()
     {
         if ((currentHealth <= 0) && (alive))
@@ -73,7 +69,6 @@ public class EnemyHealth : MonoBehaviour
             StartCoroutine(Death());
         }
     }
-
     private IEnumerator Death()
     {
         alive = false;
@@ -91,5 +86,4 @@ public class EnemyHealth : MonoBehaviour
 
         gameObject.SetActive(false);
     }
-
 }

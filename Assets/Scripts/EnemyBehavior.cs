@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyBehavior : MonoBehaviour
@@ -14,24 +13,23 @@ public class EnemyBehavior : MonoBehaviour
     Vector2 actualPosition;
     Vector2 playerPosition;
 
-    private bool FacingRight = true;                                            ////////////////////
-    public float movementSpeed = 0.5f;                                         //
-    private float movementTime = 2f;                                            //
-    private float restTime = 3f;                                                //
-    private float dangerDistance = 2.5f;                                        //
-    [SerializeField]                                                            //
-    private float attackDistance = 0;                                           //  Movement and path variables
-    private float spawnDistance = 3f;                                           //
-    private float timer;                                                        //
-    private float h = 0;                                                        //
-    private bool left = true;                                                   //
-    private int n = 5;                                                          ////////////////////
-
-    private int damage = 1;                                                   //
-    private bool Attacking;                                                     //
-    private bool Attacked;                                                      //
-    AnimatorClipInfo[] currentClipInfo;                                         //
-    private float clipNormalizedTime;                                           //
+    private bool FacingRight = true;
+    public float movementSpeed = 0.5f;
+    private float movementTime = 2f;
+    private float restTime = 3f;
+    private float dangerDistance = 2.5f;
+    [SerializeField]
+    private float attackDistance = 0;
+    private float spawnDistance = 3f;
+    private float timer;
+    private float h = 0;
+    private bool left = true;
+    private int n = 5;
+    private int damage = 1;
+    private bool Attacking;
+    private bool Attacked;
+    AnimatorClipInfo[] currentClipInfo;
+    private float clipNormalizedTime;
     private float timerAttack;
     [SerializeField]
     private float AttackRadius = .6f;
