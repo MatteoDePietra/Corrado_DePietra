@@ -14,7 +14,6 @@ public class CameraBehavior : MonoBehaviour
     private float mystSmooth = 5f;
     private Vector3 mystOffset;
     private Vector3 timeOffset;
-
     private void Start()
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;

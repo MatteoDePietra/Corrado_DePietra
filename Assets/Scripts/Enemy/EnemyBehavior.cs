@@ -1,51 +1,40 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyShooting : MonoBehaviour
+public class EnemyBehavior : MonoBehaviour
 {
-    Rigidbody2D body;
-    Animator animator;
-    LayerMask playerLayer;
-    
+    private Rigidbody2D body;
+    private Animator animator;
+    private LayerMask playerLayer;
+    private Vector2 spawnPosition;
+    internal Vector2 actualPosition;
+    internal Vector2 playerPosition;
+    private bool facingRight = true;
     [SerializeField]
-    private Transform firePoint = null;
+    internal float movementSpeed = 0.5f;
+    private float movementTime = 2f;
+    private float restTime = 3f;
     [SerializeField]
-    private GameObject bullet = null;
-    Vector2 spawnPosition;
-    Vector2 actualPosition;
-    Vector2 playerPosition;
-
-    private bool FacingRight = true;                                            ////////////////////
-    public float movementSpeed = 0.5f;                                         //
-    private float movementTime = 2f;                                            //
-    private float restTime = 3f;                                                //
-    private float dangerDistance = 2.5f;                                        //
-    [SerializeField]                                                            //
-    private float attackDistance = 1f;                                          //  Movement and path variables
-    private float spawnDistance = 3f;                                           //
-    private float timer;                                                        //
-    private float h = 0;                                                        //
-    private bool left = true;                                                   //
-    private int n = 5;                                                          ////////////////////
-
-    private bool attacking;                                                     //
-    private bool shooted;                                                      //
-    AnimatorClipInfo[] currentClipInfo;                                         //
-    private float clipNormalizedTime;                                           //
-    private float timerAttack;
-
+    internal float dangerDistance = 2.5f;
+    [SerializeField]
+    internal float attackDistance = 0.1f;
+    private float spawnDistance = 3f;
+    private float timerPath;
+    private float h = 0;
+    private bool left = true;
+    private int n = 5;
+    internal bool attacking;
+    internal float timerAttack;
     void Start()                                                                // Start is called before the first frame update
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         playerLayer = LayerMask.GetMask("Player");
-        timer = restTime;
-        timerAttack = .5f;
+        timerPath = restTime;
+        timerAttack = .2f;
         StartCoroutine(DoCheck());
         spawnPosition = transform.position;
         attacking = false;
-        shooted = false;
     }
     void Update()                                                               // Update is called once per frame
     {
@@ -55,9 +44,8 @@ public class EnemyShooting : MonoBehaviour
         else 
             body.velocity = new Vector2(Vector2.right.x * 0 * movementSpeed, body.velocity.y);
         MovementAnimation();
-        AttackAnimation();
     }
-    private IEnumerator DoCheck()                                               // Check all distance 
+    private IEnumerator DoCheck()                                               // Check all distance every .3 sec
     {
         for (; ; )
         {
@@ -77,7 +65,7 @@ public class EnemyShooting : MonoBehaviour
     {
         return Mathf.Abs(Position1.x - Position2.x);
     }
-    private void Path()                                                         //  Path design of walking enemy
+    private void Path()                                                         //  Path design of walking enemies
     {
         if ((DistanceCheck(actualPosition, spawnPosition) >= spawnDistance) && (DistanceCheck(playerPosition, spawnPosition) >= spawnDistance))
         {
@@ -90,19 +78,19 @@ public class EnemyShooting : MonoBehaviour
                 h = 1;
                 n = 1;
                 left = false;
-                timer = restTime;
+                timerPath = restTime;
             }
             else
             {
                 h = -1;
                 n = 1;
                 left = true;
-                timer = restTime;
+                timerPath = restTime;
             }
         }
         else if ((DistanceCheck() > dangerDistance) && (DistanceCheck(actualPosition, spawnPosition) < spawnDistance))
         {
-            if ((timer < 0) && (n < 10))
+            if ((timerPath < 0) && (n < 10))
             {
                 n++;
                 if (n == 10)
@@ -115,15 +103,15 @@ public class EnemyShooting : MonoBehaviour
                     if (left == true)
                         h = -1;
                     else h = 1;
-                    timer = movementTime;
+                    timerPath = movementTime;
                 }
                 else
                 {
                     h = 0;
-                    timer = restTime;
+                    timerPath = restTime;
                 }
             }
-            else timer -= Time.deltaTime;
+            else timerPath -= Time.deltaTime;
         }
         else if (((DistanceCheck() > attackDistance) && (DistanceCheck() <= dangerDistance) && (DistanceCheck(actualPosition, spawnPosition) < spawnDistance)) && (!attacking))
         {
@@ -141,62 +129,25 @@ public class EnemyShooting : MonoBehaviour
     }
     private void MovementAnimation ()                                           // Start animation
     {
-        if ((h < 0) && FacingRight)
+        if ((h < 0) && facingRight)
         {
             Flip();
         }
-        else if ((h > 0) && !FacingRight)
+        else if ((h > 0) && !facingRight)
         {
             Flip();
         }
 
-        if (this.body.velocity.x != 0)
+        if (body.velocity.x != 0)
         {
-            timerAttack = .5f;
+            timerAttack = .2f;
             animator.SetBool("Walk", true);
         }
         else animator.SetBool("Walk", false);
     }
-    private void Flip()
+    internal void Flip()
     {
-        FacingRight = !FacingRight;
+        facingRight = !facingRight;
         body.transform.Rotate(0f, 180f, 0f);
-    }
-    private void AttackAnimation()
-    {
-        currentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
-
-        if (currentClipInfo[0].clip.name.Equals("Attack"))
-        {
-            clipNormalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-        }
-
-        if (attacking)
-        {
-            if (((currentClipInfo[0].clip.name.Equals("Idle")) || (currentClipInfo[0].clip.name.Equals("Walk"))) && (timerAttack <= 0))
-                animator.SetBool("Attack", true);
-            timerAttack -= Time.deltaTime;
-        }
-
-        if ((clipNormalizedTime >= .5f) && (clipNormalizedTime < 1f) && (!shooted))
-        {
-            Shoot(shooted);
-            shooted = true;
-        }
-        else if ((clipNormalizedTime >= 1f) || (currentClipInfo[0].clip.name.Equals("Damage")))
-        {
-            timerAttack = .5f;
-            animator.SetBool("Attack", false);
-            clipNormalizedTime = 0f;
-            if (shooted)
-                shooted = !shooted;
-            if (attacking)
-                attacking = !attacking;
-        }
-    }
-    private void Shoot(bool shooted)
-    {
-        if (!shooted)
-            Instantiate(bullet, firePoint.position, firePoint.rotation);
     }
 }

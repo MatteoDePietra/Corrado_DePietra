@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ItemCollision : MonoBehaviour
 {
-    public void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (this.gameObject.CompareTag("Coin"))
         {

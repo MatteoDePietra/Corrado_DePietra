@@ -5,8 +5,7 @@ public class BackgroundLoop : MonoBehaviour
     public GameObject[] levels;
     private Camera mainCamera;
     private Vector2 screenBounds;
-
-    void Start()
+    private void Start()
     {
         mainCamera = gameObject.GetComponent<Camera>();
         screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, mainCamera.transform.position.z));
@@ -15,7 +14,7 @@ public class BackgroundLoop : MonoBehaviour
             loadChildObjects(obj);
         }
     }
-    void loadChildObjects(GameObject obj)
+    private void loadChildObjects(GameObject obj)
     {
         float objectWidth = obj.GetComponent<SpriteRenderer>().bounds.size.x;
         int childsNeeded = (int)Mathf.Ceil(screenBounds.x * 2 / objectWidth);
@@ -30,7 +29,7 @@ public class BackgroundLoop : MonoBehaviour
         Destroy(clone);
         Destroy(obj.GetComponent<SpriteRenderer>());
     }
-    void repositionChildObjects(GameObject obj)
+    private void repositionChildObjects(GameObject obj)
     {
         Transform[] children = obj.GetComponentsInChildren<Transform>();
         if (children.Length > 1)
@@ -50,7 +49,7 @@ public class BackgroundLoop : MonoBehaviour
             }
         }
     }
-    void LateUpdate()
+    private void LateUpdate()
     {
         foreach (GameObject obj in levels)
         {

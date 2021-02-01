@@ -1,31 +1,22 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Shooting : MonoBehaviour
+public class PlayerAttack : MonoBehaviour
 {
+    private Animator animator;
+    private AnimatorClipInfo[] currentClipInfo;
+    private LayerMask enemyLayer;
     [SerializeField]
-    private Transform firePoint = null;
-    [SerializeField]
-    private GameObject bullet1 = null;
-    [SerializeField]
-    private GameObject bullet2 = null;
-
-    Animator animator;
-    AnimatorClipInfo[] currentClipInfo;
-    AudioManager audioManager;
+    private Transform attackPoint = null;
 
     private float clipNormalizedTime;
-    private bool firstShot;
-    private bool secondShot;
+    private int damage = 1;
+    private bool Attacked;
+    private float AttackRadius = .3f;
     private void Start()
     {
         animator = GetComponent<Animator>();
-        firstShot = false;
-        secondShot = false;
-        audioManager = AudioManager.instance;
-        if (audioManager == null)
-        {
-            Debug.LogError("AudioManager non trovato");
-        }
+        enemyLayer = LayerMask.GetMask("Enemy");
+        Attacked = false;
     }
     private void Update()
     {
@@ -45,40 +36,22 @@ public class Shooting : MonoBehaviour
             if ((currentClipInfo[0].clip.name.Equals("Idle")) || (currentClipInfo[0].clip.name.Equals("Still")))
             {
                 animator.SetBool("Attack_Player", true);
-                audioManager.PlaySound("Shot");
             }
             else if (currentClipInfo[0].clip.name.Equals("Walk"))
             {
                 animator.SetBool("Attack_Walk", true);
-                audioManager.PlaySound("Shot");
             }
             else if (currentClipInfo[0].clip.name.Equals("Run"))
             {
                 animator.SetBool("Attack_Run", true);
-                audioManager.PlaySound("Shot");
-
             }
             else if ((currentClipInfo[0].clip.name.Equals("Attack_Player")) && (clipNormalizedTime > 0.85))
             {
                 animator.SetBool("Attack_Extra", true);
-                audioManager.PlaySound("Shot");
             }
-
         }
         if ((clipNormalizedTime >= .3f) && (clipNormalizedTime < 1f))
-        {
-            if (((currentClipInfo[0].clip.name.Equals("Attack_Player")) || (currentClipInfo[0].clip.name.Equals("Attack_Walk")) || (currentClipInfo[0].clip.name.Equals("Attack_Run")))&& !firstShot)
-            {
-                Shoot(1);
-                firstShot = true;
-            }
-            else if ((currentClipInfo[0].clip.name.Equals("Attack_Extra")) && !secondShot)
-            {
-                Shoot(2);
-                secondShot = true;
-            }
-
-        }
+            Attack();
         else if (clipNormalizedTime >= 1f)
         {
             animator.SetBool("Attack_Player", false);
@@ -86,17 +59,27 @@ public class Shooting : MonoBehaviour
             animator.SetBool("Attack_Run", false);
             animator.SetBool("Attack_Extra", false);
             clipNormalizedTime = 0f;
-            if (firstShot)
-                firstShot = !firstShot;
-            if (secondShot)
-                secondShot = !secondShot;
+            if (Attacked)
+                Attacked = !Attacked;
         }
     }
-    private void Shoot(int bulletNumber)
+    private void Attack()
     {
-        if (bulletNumber == 1)
-            Instantiate(bullet1, firePoint.position, firePoint.rotation);
-        else if (bulletNumber == 2)
-            Instantiate(bullet2, firePoint.position, firePoint.rotation);
+        Collider2D[] enemyHit = Physics2D.OverlapCircleAll(attackPoint.position, AttackRadius, enemyLayer);
+
+        foreach (Collider2D enemy in enemyHit)
+        {
+            if (!Attacked)
+            {
+                enemy.GetComponent<EnemyHealth>().Damage(damage);
+                Attacked = true;
+            }
+        }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null)
+            return;
+        Gizmos.DrawWireSphere(attackPoint.position, AttackRadius);
     }
 }

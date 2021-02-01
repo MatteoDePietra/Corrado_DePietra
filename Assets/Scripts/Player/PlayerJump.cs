@@ -2,16 +2,15 @@
 
 public class PlayerJump : MonoBehaviour
 {
-    Rigidbody2D body;
-    BoxCollider2D boxCollider2D;
-    LayerMask layer;
-    Animator animator;
-    AudioManager audioManager;
-
+    private Rigidbody2D body;
+    private BoxCollider2D boxCollider2D;
+    private LayerMask layer;
+    private Animator animator;
+    private AudioManager audioManager;
     [SerializeField]
-    public static float jumpForce = 0.45f;
+    private float jumpForce = 0.45f;
     private byte jump = 0;
-    void Start()
+    private void Start()
     {
         body = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
@@ -23,7 +22,7 @@ public class PlayerJump : MonoBehaviour
             Debug.LogError("AudioManager non trovato");
         }
     }
-    void Update()
+    private void Update()
     {
         Jumping();
         if (IsGrounded() && (body.velocity.y == 0) && (jump != 0))

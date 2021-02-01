@@ -8,28 +8,22 @@ public class EnemyHealth : MonoBehaviour
     private Rigidbody2D body;
     private Animator animator;
     private EnemyBehavior enemyBehavior;
-    private EnemyShooting enemyShooting;
-    [SerializeField]
-    private bool shooting;
     private bool alive;
 
     [SerializeField]
     private int maxHealth;
     private int currentHealth;
 
-    void Start()
+    private void Start()
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         alive = true;
-        if (!shooting)
-            enemyBehavior = GetComponent<EnemyBehavior>();
-        else 
-            enemyShooting = GetComponent<EnemyShooting>();
+        enemyBehavior = GetComponent<EnemyBehavior>();
         currentHealth = maxHealth;
         //healthBar.SetMaxHealth(maxHealth);
     }
-    void Update()
+    private void Update()
     {
         currentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
         if (currentClipInfo[0].clip.name.Equals("Death"))
@@ -39,7 +33,7 @@ public class EnemyHealth : MonoBehaviour
         
         HealthCheck();
     }
-    public void Damage(int damage)
+    internal void Damage(int damage)
     {
         if (currentHealth > 0)
         {
@@ -52,15 +46,9 @@ public class EnemyHealth : MonoBehaviour
     }
     private IEnumerator stopMovement()
     {
-        if (!shooting)
             enemyBehavior.movementSpeed = 0f;
-        else
-            enemyShooting.movementSpeed = 0f;
         yield return new WaitForSecondsRealtime(.4f);
-        if (!shooting)
             enemyBehavior.movementSpeed = .5f;
-        else
-            enemyShooting.movementSpeed = .5f;
     }
     private void HealthCheck()
     {
@@ -74,10 +62,7 @@ public class EnemyHealth : MonoBehaviour
         alive = false;
         yield return new WaitForSecondsRealtime(.4f);
         animator.SetTrigger("Death");
-        if (!shooting)
             enemyBehavior.movementSpeed = 0f;
-        else
-            enemyShooting.movementSpeed = 0f;
         body.velocity = new Vector2(0, 0);
         body.bodyType = RigidbodyType2D.Kinematic;
         clipNormalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;

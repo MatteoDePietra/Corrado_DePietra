@@ -5,19 +5,18 @@ public class PlayerHealth : MonoBehaviour
 {
     private float clipNormalizedTime;
     private AnimatorClipInfo[] currentClipInfo;
-    public Rigidbody2D body;
-    public Animator animator;
-    public PlayerMovement playerMovement;
-    public AudioManager audioManager;
-    public HealthBar healthBar; 
-    public MainMenu mainMenu;
+    private Rigidbody2D body;
+    private Animator animator;
+    private PlayerMovement playerMovement;
+    private AudioManager audioManager;
+    private MainMenu mainMenu;
+    [SerializeField]
+    private HealthBar healthBar;
     private bool alive;
-
     [SerializeField]
     private int maxHealth;
     private int currentHealth;
-
-    void Start()
+    private void Start()
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -31,7 +30,7 @@ public class PlayerHealth : MonoBehaviour
             Debug.LogError("AudioManager non trovato");
         }
     }
-    void Update()
+    private void Update()
     {
         if (mainMenu == null)
         {

@@ -6,7 +6,7 @@ public class Bullet : MonoBehaviour
     private float speed = 3.5f;
     [SerializeField]
     private Rigidbody2D body = null;
-    AudioManager audioManager;
+    private AudioManager audioManager;
     [SerializeField]
     private int damage;
     private float timer = 1.1f;

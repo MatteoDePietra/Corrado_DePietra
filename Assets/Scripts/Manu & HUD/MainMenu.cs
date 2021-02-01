@@ -18,7 +18,7 @@ public class MainMenu : MonoBehaviour
     private bool activeGameOverMenu;
     public float masterVolume;
     public float musicVolume;
-    public AudioManager audioManager = null;
+    internal AudioManager audioManager = null;
     public static MainMenu instance;
     private void Awake()
     {
@@ -132,47 +132,45 @@ public class MainMenu : MonoBehaviour
         musicVolume = volume;
         audioManager.SetVolumeSound(musicVolume, "Music");
     }
-    public void PlayGame()
+    internal void PlayGame()
     {
         StartCoroutine(LoadLevel(1));
     }
-    public void QuitGame()
+    internal void QuitGame()
     {
         StartCoroutine(Quit());
     }
-    public void GameOver()
+    internal void GameOver()
     {
+        canvasGroup.alpha = 0.8f;
         if (!activeGameOverMenu)
             activeGameOverMenu = true;
-        canvasGroup.alpha = 0.5f;
     }
-    public void RetryGame()
+    internal void RetryGame()
     {
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex));
         if (activeGameOverMenu)
-        {
             activeGameOverMenu = false;
-        }
     }
-    public void PauseGame()
+    internal void PauseGame()
     {
         canvasGroup.alpha = 0.5f;
         Time.timeScale = 0f;
         if (!activePauseMenu)
             activePauseMenu = true;
     }
-    public void ResumeGame()
+    internal void ResumeGame()
     {
         canvasGroup.alpha = 0f;
         Time.timeScale = 1f;
         if (activePauseMenu)
             activePauseMenu = false;
     }
-    public void OptionMenu()
+    internal void OptionMenu()
     {
         activeOptionMenu = true;
     }
-    public void BackMenu()
+    internal void BackMenu()
     {
         if (SceneManager.GetActiveScene().buildIndex != 0)
         {

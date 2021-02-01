@@ -5,26 +5,22 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D body;
     private Animator animator;
-
     [SerializeField]
     private AudioManager audioManager;
     private Vector2 velocity;                                                           
-
     private bool FacingRight = true;
     [SerializeField]
-    public Vector2 moveSpeed;
+    internal Vector2 moveSpeed;
     //public float moveCoin = 1f;                                                 // If Coin velocity, moveCoin = 2;
     [SerializeField]
-    public float timer = 10f;
+    private float timer = 10f;
     private float h;
     private float j;
-    public float distance;
+    private float distance;
     [SerializeField]
     private LayerMask stairsLayer;
     private bool isClimbing;
-
-
-    void Start()                                                                // Start is called before the first frame update
+    private void Start()                                                                // Start is called before the first frame update
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -36,13 +32,11 @@ public class PlayerMovement : MonoBehaviour
             Debug.LogError("AudioManager non trovato");
         }
     }
-                                                                                
-    void Update()                                                               // Update is called once per frame
+    private void Update()                                                               // Update is called once per frame
     {
         Movement();
         animationMovement();
     }
-
     private void Movement()
     {
         h = Input.GetAxisRaw("Horizontal");
@@ -81,7 +75,6 @@ public class PlayerMovement : MonoBehaviour
             body.gravityScale = 1;
         }
     }
-
     private void animationMovement()
     {
         if ((body.velocity.x < 0) && FacingRight)
@@ -127,19 +120,16 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("IsRunning", false);
         }*/
     }
-
     private void Flip()
     {
         FacingRight = !FacingRight;
         body.transform.Rotate(0f, 180f, 0f);
     }
-
     private IEnumerator Footstep()
     {
-        //float x;
+        yield return new WaitForSeconds(.5f);
         for( ; ; )
         {
-            //x = Input.GetAxisRaw("Horizontal");
             if ((body.velocity.x != 0) && (body.velocity.y == 0))
             {
                 audioManager.PlaySound("Footstep");
