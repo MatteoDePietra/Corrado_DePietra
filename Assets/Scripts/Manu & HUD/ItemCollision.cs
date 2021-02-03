@@ -7,7 +7,6 @@ public class ItemCollision : MonoBehaviour
         if (this.gameObject.CompareTag("Coin"))
         {
             Destroy(gameObject);
-            //CoinCounter.coinCount += 1;
             CoinCounter.AddCoin();
         }
     }

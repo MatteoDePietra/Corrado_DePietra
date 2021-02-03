@@ -59,10 +59,11 @@ public class EnemyHealth : MonoBehaviour
     }
     private IEnumerator Death()
     {
+        EnemyCounter.AddEnemy();
         alive = false;
         yield return new WaitForSecondsRealtime(.4f);
         animator.SetTrigger("Death");
-            enemyBehavior.movementSpeed = 0f;
+        enemyBehavior.movementSpeed = 0f;
         body.velocity = new Vector2(0, 0);
         body.bodyType = RigidbodyType2D.Kinematic;
         clipNormalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;

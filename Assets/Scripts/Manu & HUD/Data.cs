@@ -6,7 +6,6 @@ public class Data
     internal int lastLevel;
     internal int Coin;
     internal float recordTime;
-
     internal Data (MainMenu mainMenu)
     {
         masterVolume = mainMenu.masterVolume;

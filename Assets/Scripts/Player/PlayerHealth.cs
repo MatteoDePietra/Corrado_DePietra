@@ -21,13 +21,22 @@ public class PlayerHealth : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
-        audioManager = AudioManager.instance;
         currentHealth = maxHealth = 5;
         alive = true;
         healthBar.SetMaxHealth(maxHealth);
+
+        mainMenu = MainMenu.instance;
+        if (mainMenu == null)
+        {
+            GameObject gameObject = GameObject.Find("Menu");
+            mainMenu = gameObject.GetComponent<MainMenu>();
+        }
+
+        audioManager = AudioManager.instance;
         if (audioManager == null)
         {
-            Debug.LogError("AudioManager non trovato");
+            GameObject gameObject = GameObject.Find("AudioManager");
+            audioManager = gameObject.GetComponent<AudioManager>();
         }
     }
     private void Update()
@@ -81,7 +90,7 @@ public class PlayerHealth : MonoBehaviour
 
         yield return new WaitUntil(() => (currentClipInfo[0].clip.name.Equals("Death")) && (clipNormalizedTime > 1));
 
-        CoinCounter.CoinReset();
+        CoinCounter.CounterReset();
         Time.timeScale = 0f;
         gameObject.SetActive(false);
         mainMenu.GameOver();

@@ -8,6 +8,7 @@ TagManager:
   - Background
   - Stairs
   - Coin
+  - Bridge
   layers:
   - Default
   - TransparentFX

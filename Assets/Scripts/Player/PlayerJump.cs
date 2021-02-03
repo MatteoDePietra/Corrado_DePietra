@@ -38,7 +38,7 @@ public class PlayerJump : MonoBehaviour
     }
     private bool IsGrounded() 
     {
-        float extraHeightText = .1f;
+        float extraHeightText = .07f;
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0f, Vector2.down, extraHeightText, layer);
 
         Color rayColor;

@@ -11,10 +11,10 @@ public class Sound
     internal AudioSource source;
     [Range(0f,1f)]
     [SerializeField]
-    internal float volume = 0.7f;
+    public float volume = 0.7f;
     [Range(0.5f, 1.5f)]
     [SerializeField]
-    internal float pitch = 0.5f;
+    public float pitch = 0.5f;
     [Range(0f, 0.5f)]
     [SerializeField]
     internal float randomVolume = 0.5f;
@@ -23,19 +23,19 @@ public class Sound
     internal float randomPitch = 0.5f;
     [SerializeField]
     internal bool loop = false;
-    internal void SetSource(AudioSource _source)
+    public void SetSource(AudioSource _source)
     {
         source = _source;
         source.clip = clip;
         source.loop = loop;
     }
-    internal void Play()
+    public void Play()
     {
         source.volume = volume * (1 + Random.Range(-randomVolume / 2f, randomVolume / 2f));
         source.pitch = pitch * (1 + Random.Range(-randomPitch / 2f, randomPitch / 2f));
         source.Play();
     }
-    internal void Stop()
+    public void Stop()
     {
         source.Stop();
     }
@@ -71,15 +71,21 @@ public class AudioManager : MonoBehaviour
         }
         PlaySound("Music");
     }
-    internal void SetVolumeSound(float _volume, string _name)
+    public void SetVolumeSound(float _volume, string _name)
     {
-        for (int i = 0; i < sounds.Length; i++)
+        if (_name == "Music")
         {
-            AudioSource _go = this.transform.GetChild(i).GetComponent<AudioSource>();
-            _go.volume = 0.5f * _volume;
+            AudioSource _go = this.transform.GetChild(0).GetComponent<AudioSource>();
+            _go.volume = _volume;
         }
+        else
+            for (int i = 0; i < sounds.Length; i++)
+                {
+                    AudioSource _go = this.transform.GetChild(i).GetComponent<AudioSource>();
+                    _go.volume = _volume;
+                }
     }
-    internal void PlaySound(string _name)
+    public void PlaySound(string _name)
     {
         for (int i = 0; i < sounds.Length; i++)
         {
@@ -91,7 +97,7 @@ public class AudioManager : MonoBehaviour
         }
         Debug.LogWarning("sound non trovato");
     }
-    internal void StopSound(string _name)
+    public void StopSound(string _name)
     {
         for (int i = 0; i < sounds.Length; i++)
         {

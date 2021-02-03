@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class CameraBehavior : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class CameraBehavior : MonoBehaviour
     private Vector3 timeOffset;
     private void Start()
     {
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        target = GameObject.Find("Player").transform.GetChild(MainMenu.playerChoosen);
         previousCamPos = transform.position;
         parallaxScale = new float[backgrounds.Length];
         for (int i = 0; i < backgrounds.Length; i++)

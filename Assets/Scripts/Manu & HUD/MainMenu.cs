@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
@@ -12,27 +13,39 @@ public class MainMenu : MonoBehaviour
     [SerializeField]
     private CanvasGroup canvasGroup = null;
     private float transitionTimeCF = 1.5f;
+    public static int playerChoosen;
     private bool activeMainMenu;
+    private bool activeCharacterChooser;
     private bool activeOptionMenu;
     private bool activePauseMenu;
     private bool activeGameOverMenu;
-    public float masterVolume;
-    public float musicVolume;
-    internal AudioManager audioManager = null;
+    private bool activeWinMenu;
+    internal float masterVolume;
+    internal float musicVolume;
+    [SerializeField]
+    private Slider masterSlider;
+    [SerializeField]
+    private Slider musicSlider;
+    [SerializeField]
+    private AudioManager audioManager;
     public static MainMenu instance;
     private void Awake()
     {
         if (instance != null)
         {
-            if (instance != this)
-            {
-                Destroy(this.gameObject);
-            }
+            Destroy(this.gameObject);
         }
         else
         {
             instance = this;
             DontDestroyOnLoad(this);
+        }
+
+        audioManager = AudioManager.instance;
+        if (audioManager == null)
+        {
+            GameObject gameObject = GameObject.Find("AudioManager");
+            audioManager = gameObject.GetComponent<AudioManager>();
         }
 
         if (SceneManager.GetActiveScene().buildIndex == 0)
@@ -46,8 +59,11 @@ public class MainMenu : MonoBehaviour
             canvasGroup.alpha = 0f;
         }
 
+        activeOptionMenu = false;
+        activeCharacterChooser = false;
         activePauseMenu = false;
         activeGameOverMenu = false;
+        activeWinMenu = false;
     }
     private void FollowTarget()
     {
@@ -64,29 +80,37 @@ public class MainMenu : MonoBehaviour
     }
     private void Update()
     {
-        if (SceneManager.GetActiveScene().buildIndex == 0)
-        {
-            activeMainMenu = true;
-        }
-        else
-        {
-            activeMainMenu = false;
-        }
+        if (Input.GetKey(KeyCode.Escape) && (activeMainMenu))
+            BackMenu();
 
-        if ((activeMainMenu) && (!activeOptionMenu))
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+            activeMainMenu = true;
+        else
+            activeMainMenu = false;
+
+        if ((activeMainMenu) && (!activeOptionMenu) && (!activeCharacterChooser))
         {
             instance.transform.GetChild(1).gameObject.SetActive(true);
             instance.transform.GetChild(2).gameObject.SetActive(false);
+            instance.transform.GetChild(5).gameObject.SetActive(false);
         }
-        else if ((activeMainMenu) && (activeOptionMenu))
+        else if ((activeMainMenu) && (activeOptionMenu) && (!activeCharacterChooser))
         {
             instance.transform.GetChild(1).gameObject.SetActive(false);
-            instance.transform.GetChild(2).gameObject.SetActive(true);            
+            instance.transform.GetChild(2).gameObject.SetActive(true);
+            instance.transform.GetChild(5).gameObject.SetActive(false);
+        }
+        else if ((activeMainMenu) && (!activeOptionMenu) && (activeCharacterChooser))
+        {
+            instance.transform.GetChild(1).gameObject.SetActive(false);
+            instance.transform.GetChild(2).gameObject.SetActive(false);
+            instance.transform.GetChild(5).gameObject.SetActive(true);
         }
         else if (!activeMainMenu)
         {
             instance.transform.GetChild(1).gameObject.SetActive(false);
-            instance.transform.GetChild(2).gameObject.SetActive(false);            
+            instance.transform.GetChild(2).gameObject.SetActive(false); 
+            instance.transform.GetChild(5).gameObject.SetActive(false);
         }
         
         if (activePauseMenu)
@@ -107,6 +131,14 @@ public class MainMenu : MonoBehaviour
             instance.transform.GetChild(4).gameObject.SetActive(false);
         }
 
+        if (activeWinMenu)
+        {
+            instance.transform.GetChild(6).gameObject.SetActive(true);
+        }
+        else if (!activeWinMenu)
+        {
+            instance.transform.GetChild(6).gameObject.SetActive(false);
+        }
         if (SceneManager.GetActiveScene().buildIndex != 0)
         {
             if (!activeGameOverMenu)
@@ -132,49 +164,70 @@ public class MainMenu : MonoBehaviour
         musicVolume = volume;
         audioManager.SetVolumeSound(musicVolume, "Music");
     }
-    internal void PlayGame()
+    public void PlayGame()
     {
-        StartCoroutine(LoadLevel(1));
+        activeCharacterChooser = true;
     }
-    internal void QuitGame()
+    public void Botton1()
     {
+        playerChoosen = 0;
+        audioManager.StopSound("Music");
+        StartCoroutine(LoadLevel(1,playerChoosen));
+    }
+    public void Botton2()
+    {
+        playerChoosen = 1;
+        audioManager.StopSound("Music");
+        StartCoroutine(LoadLevel(1,playerChoosen));
+    }
+    public void Botton3()
+    {
+        playerChoosen = 2;
+        audioManager.StopSound("Music");
+        StartCoroutine(LoadLevel(1,playerChoosen));
+    }
+    public void QuitGame()
+    {
+        audioManager.StopSound("Music");
         StartCoroutine(Quit());
     }
-    internal void GameOver()
+    public void GameOver()
     {
         canvasGroup.alpha = 0.8f;
         if (!activeGameOverMenu)
             activeGameOverMenu = true;
     }
-    internal void RetryGame()
+    public void RetryGame()
     {
-        StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex));
+        StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex, playerChoosen));
         if (activeGameOverMenu)
             activeGameOverMenu = false;
     }
-    internal void PauseGame()
+    public void PauseGame()
     {
         canvasGroup.alpha = 0.5f;
         Time.timeScale = 0f;
         if (!activePauseMenu)
             activePauseMenu = true;
     }
-    internal void ResumeGame()
+    public void ResumeGame()
     {
         canvasGroup.alpha = 0f;
         Time.timeScale = 1f;
         if (activePauseMenu)
             activePauseMenu = false;
     }
-    internal void OptionMenu()
+    public void OptionMenu()
     {
         activeOptionMenu = true;
     }
-    internal void BackMenu()
+    public void BackMenu()
     {
+        audioManager.StopSound("Music");
+
         if (SceneManager.GetActiveScene().buildIndex != 0)
         {
-            StartCoroutine(LoadLevel(0));
+            StartCoroutine(LoadLevel(0,playerChoosen));
         }
 
         Time.timeScale = 1f;
@@ -185,10 +238,19 @@ public class MainMenu : MonoBehaviour
             activeOptionMenu = false;
         if (activeGameOverMenu)
             activeGameOverMenu = false;
+        if (activeWinMenu)
+            activeWinMenu = false;
+        if (activeCharacterChooser)
+            activeCharacterChooser = false;
     }
-    private IEnumerator LoadLevel(int levelIndex)
+    public void WinMenu()
     {
-
+        canvasGroup.alpha = 0.6f;
+        if (!activeWinMenu)
+            activeWinMenu = true;
+    }
+    private IEnumerator LoadLevel(int levelIndex, int characterChoosen)
+    {
         crossFade.SetTrigger("Start");
 
         Time.timeScale = 1f;
@@ -197,16 +259,44 @@ public class MainMenu : MonoBehaviour
 
         {
             Data data = SaveSystem.Load();
-            masterVolume = data.masterVolume;
+
+            masterVolume = data.masterVolume; 
+            masterSlider.value = masterVolume;
             musicVolume = data.musicVolume;
+            musicSlider.value = musicVolume;
         }
 
         SceneManager.LoadScene(levelIndex);
-        
+
+        audioManager.PlaySound("Music");
+
         if (levelIndex != 0)
         {
             canvasGroup.alpha = 0f;
             activeMainMenu = false;
+            if (levelIndex == 1)
+            {
+                yield return new WaitForSeconds(.01f);
+                GameObject c = GameObject.Find("Player");
+                if (characterChoosen == 0)
+                {
+                    c.transform.GetChild(0).gameObject.SetActive(true);
+                    c.transform.GetChild(1).gameObject.SetActive(false);
+                    c.transform.GetChild(2).gameObject.SetActive(false);
+                }
+                else if (characterChoosen == 1)
+                {
+                    c.transform.GetChild(0).gameObject.SetActive(false);
+                    c.transform.GetChild(1).gameObject.SetActive(true);
+                    c.transform.GetChild(2).gameObject.SetActive(false);
+                }
+                else if (characterChoosen == 2)
+                {
+                    c.transform.GetChild(0).gameObject.SetActive(false);
+                    c.transform.GetChild(1).gameObject.SetActive(false);
+                    c.transform.GetChild(2).gameObject.SetActive(true);
+                }
+            }
         }
         else 
         {

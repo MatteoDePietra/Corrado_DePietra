@@ -5,7 +5,6 @@ public class CoinCounter : MonoBehaviour
 {
     private Text text;
     private static int coinCount = 0;
-
     void Start()
     {
         text = GetComponent<Text> ();
@@ -17,8 +16,7 @@ public class CoinCounter : MonoBehaviour
     internal static void AddCoin() {
         coinCount += 1;
     } 
-
-    internal static void CoinReset() {
+    internal static void CounterReset() {
         coinCount = 0;
     }
 }
