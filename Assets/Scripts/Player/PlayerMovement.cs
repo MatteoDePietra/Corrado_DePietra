@@ -7,13 +7,13 @@ public class PlayerMovement : MonoBehaviour
     private Animator animator;
     [SerializeField]
     private AudioManager audioManager;
-    private Vector2 velocity;                                                           
     private bool FacingRight = true;
     [SerializeField]
     internal Vector2 moveSpeed;
-    //public float moveCoin = 1f;                                                 // If Coin velocity, moveCoin = 2;
     [SerializeField]
-    private float timer = 10f;
+    private float timerIdle = 10f;
+    [SerializeField]
+    private float timerRun = 2.5f;
     private float h;
     private float j;
     private float distance;
@@ -24,8 +24,9 @@ public class PlayerMovement : MonoBehaviour
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        moveSpeed = new Vector2(1.8f, 1.2f);
+        moveSpeed = new Vector2(1.5f, 1.2f);
         audioManager = AudioManager.instance;
+        isClimbing = false;
         StartCoroutine(Footstep());
         if (audioManager == null)
         {
@@ -35,22 +36,21 @@ public class PlayerMovement : MonoBehaviour
     private void Update()                                                               // Update is called once per frame
     {
         Movement();
-        animationMovement();
+        AnimationMovement();
+    }
+    internal void SetTimerRun(float value)
+    {
+        timerRun = value;
     }
     private void Movement()
     {
         h = Input.GetAxisRaw("Horizontal");
 
-        /*if (moveMirror)
-        {
-            velocity = new Vector2(Vector2.right.x * moveSpeed * -h, body.velocity.y);
-        }
+        if (timerRun >= 0)
+            body.velocity = new Vector2(Vector2.right.x * moveSpeed.x * h * Time.timeScale, body.velocity.y);
         else
-        {
-        }*/
+            body.velocity = new Vector2(Vector2.right.x * moveSpeed.x * h * 1.5f * Time.timeScale, body.velocity.y);
 
-        body.velocity = new Vector2(Vector2.right.x * moveSpeed.x * h * Time.timeScale, body.velocity.y);
-        
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.up, distance, stairsLayer);
         
         if (hitInfo.collider != null)
@@ -75,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
             body.gravityScale = 1;
         }
     }
-    private void animationMovement()
+    private void AnimationMovement()
     {
         if ((body.velocity.x < 0) && FacingRight)
         {
@@ -85,40 +85,63 @@ public class PlayerMovement : MonoBehaviour
         {
             Flip();
         }
-        else if ((body.velocity.x != 0) && (body.velocity.y == 0))
+
+        if (isClimbing)
         {
+            if (body.velocity.y == 0)
+            {
+                animator.SetBool("IsClimbing", false);
+                animator.SetBool("IsClimbing_Idle", true);
+            }
+            else
+            {
+                animator.SetBool("IsClimbing", true);
+                animator.SetBool("IsClimbing_Idle", false);
+            }
+        }
+        else if (!isClimbing)
+        {
+            animator.SetBool("IsClimbing", false);
+            animator.SetBool("IsClimbing_Idle", false);
+        }
+
+        if ((body.velocity.x != 0) && (body.velocity.y == 0) && (timerRun >= 0))
+        {
+            //audioManager.SetPitchSound(0.6f, "Footstep");
             animator.SetBool("IsWalking", true);
-            timer = 10f;
+            animator.SetBool("IsRunning", false);
+            timerRun -= Time.deltaTime;
+            timerIdle = 10f;
             animator.SetBool("IsStill", false);
+        }
+        else if ((body.velocity.x != 0) && (body.velocity.y == 0) && (timerRun < 0))
+        {
+            //audioManager.SetPitchSound(0.9f, "Footstep");
+            animator.SetBool("IsWalking", false);
+            animator.SetBool("IsRunning", true);
         }
         else if (body.velocity.y != 0)
         {
             animator.SetBool("IsWalking", false);
+            animator.SetBool("IsRunning", false);
         }
-        else if ((body.velocity.x == 0) && (body.velocity.y == 0) && (timer > 0))
+        else if ((body.velocity.x == 0) && (body.velocity.y == 0) && (timerIdle > 0))
         {
-            timer -= Time.deltaTime;
+            timerRun = 2.5f;
+            timerIdle -= Time.deltaTime;
             animator.SetBool("IsWalking", false);
+            animator.SetBool("IsRunning", false);
         }
         if ((body.velocity.y != 0) || (animator.GetBool("Attack_Player")) || (animator.GetBool("Damage")))
         {
-            timer = 10f;
+            timerIdle = 10f;
             animator.SetBool("IsStill", false);
         }
 
-        if (timer <= 0)                                                         // If the player is still more than 10 sec, animation Still
+        if (timerIdle <= 0)                                                         // If the player is still more than 10 sec, animation Still
         {
             animator.SetBool("IsStill", true);
         }
-
-        /*if (moveCoin > 1f)                                                      // If the player has take Coin velocity, animation Run
-        {
-            animator.SetBool("IsRunning", true);
-        }
-        else
-        {
-            animator.SetBool("IsRunning", false);
-        }*/
     }
     private void Flip()
     {
@@ -132,8 +155,17 @@ public class PlayerMovement : MonoBehaviour
         {
             if ((body.velocity.x != 0) && (body.velocity.y == 0))
             {
-                audioManager.PlaySound("Footstep");
-                yield return new WaitForSeconds(.563f);
+                if (timerRun >= 0)
+                {
+                    audioManager.PlaySound("Footstep", 0.5f);
+                    yield return new WaitForSeconds(.2815f);
+                }
+                else if (timerRun < 0)
+                {
+                    audioManager.PlaySound("Footstep", 0.75f);
+                    yield return new WaitForSeconds(.35f);
+                }
+                //yield return new WaitForSeconds(.563f);
             }
             else if ((body.velocity.x == 0) || (body.velocity.y !=0))
             {

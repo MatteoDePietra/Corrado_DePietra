@@ -85,12 +85,35 @@ public class AudioManager : MonoBehaviour
                     _go.volume = _volume;
                 }
     }
+    public void SetPitchSound(float _pitch, string _name)
+    {
+        for (int i = 0; i < sounds.Length; i++)
+            {
+                AudioSource _go = this.transform.GetChild(i).GetComponent<AudioSource>();
+                if (_name == _go.name)
+                    _go.pitch = _pitch;
+
+            }
+    }
     public void PlaySound(string _name)
     {
         for (int i = 0; i < sounds.Length; i++)
         {
             if (sounds[i].name == _name)
             {
+                sounds[i].Play();
+                return;
+            }
+        }
+        Debug.LogWarning("sound non trovato");
+    }
+    public void PlaySound(string _name, float _pitch)
+    {
+        for (int i = 0; i < sounds.Length; i++)
+        {
+            if (sounds[i].name == _name)
+            {
+                sounds[i].pitch = _pitch;
                 sounds[i].Play();
                 return;
             }

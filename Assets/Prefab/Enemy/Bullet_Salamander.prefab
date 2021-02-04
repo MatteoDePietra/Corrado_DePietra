@@ -156,3 +156,4 @@ MonoBehaviour:
   speed: 3.5
   body: {fileID: 6810451398994047369}
   damage: 1
+  timer: 1

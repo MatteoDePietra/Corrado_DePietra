@@ -4,18 +4,11 @@ using UnityEngine;
 
 public class BridgeBehaviour : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            other.transform.GetComponent<PlayerMovement>().moveSpeed.x /= 1.5f;
-        }
-    }
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            other.transform.GetComponent<PlayerMovement>().moveSpeed.x *= 1.5f;
+            other.transform.GetComponent<PlayerMovement>().SetTimerRun(.1f);
         }
     }
 }

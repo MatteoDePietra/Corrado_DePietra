@@ -4,17 +4,23 @@ using UnityEngine.UI;
 public class CoinCounter : MonoBehaviour
 {
     private Text text;
-    private static int coinCount = 0;
+    internal static int coinCount = 0;
+    [SerializeField]
+    internal static int minimum = 15;
     void Start()
     {
         text = GetComponent<Text> ();
     }
     void Update()
     {
-        text.text = coinCount.ToString();
+        if (coinCount>=minimum)
+            text.color = Color.green;
+        else 
+            text.color = Color.red;
+        text.text = coinCount + "/" + minimum.ToString();
     }
-    internal static void AddCoin() {
-        coinCount += 1;
+    internal static void AddCoin(int quantity) {
+        coinCount += quantity;
     } 
     internal static void CounterReset() {
         coinCount = 0;

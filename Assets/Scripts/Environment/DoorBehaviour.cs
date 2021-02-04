@@ -31,8 +31,8 @@ public class DoorBehaviour : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
-            Debug.Log("vittoriaaaaaaa");
-            StartCoroutine(Win());
+            if ((CoinCounter.coinCount>CoinCounter.minimum) && (EnemyCounter.enemyCount>EnemyCounter.minimum))
+                StartCoroutine(Win());
         }
     }
     private IEnumerator Win()
@@ -49,5 +49,6 @@ public class DoorBehaviour : MonoBehaviour
         audioManager.SetVolumeSound(.2f, "Music");
         CoinCounter.CounterReset();
         EnemyCounter.CounterReset();
+        DiamondCounter.CounterReset();
     }
 }

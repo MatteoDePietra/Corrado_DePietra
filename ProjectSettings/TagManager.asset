@@ -9,6 +9,10 @@ TagManager:
   - Stairs
   - Coin
   - Bridge
+  - Plus
+  - Heart
+  - Diamond
+  - Star
   layers:
   - Default
   - TransparentFX

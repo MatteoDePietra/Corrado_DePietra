@@ -65,6 +65,7 @@ public class PlayerJump : MonoBehaviour
             body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             jump = 1;
             animator.SetBool("IsGrounded", false);
+
             animator.SetTrigger("Jump");
             audioManager.PlaySound("Jump1");
         }

@@ -1,28 +1,28 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyCounter : MonoBehaviour
+public class DiamondCounter : MonoBehaviour
 {
     private Text text;
-    internal static int enemyCount = 0;
+    internal static int diamondCount = 0;
     [SerializeField]
-    internal static int minimum = 5;
+    internal static int minimum = 1;
     void Start()
     {
         text = GetComponent<Text> ();
     }
     void Update()
     {
-        if (enemyCount>=minimum)
+        if (diamondCount>=minimum)
             text.color = Color.green;
         else 
             text.color = Color.red;
-        text.text = enemyCount + "/" + minimum.ToString();
+        text.text = diamondCount + "/" + minimum.ToString();
     }
-    internal static void AddEnemy() {
-        enemyCount += 1;
+    internal static void AddCoin() {
+        diamondCount += 1;
     } 
     internal static void CounterReset() {
-        enemyCount = 0;
+        diamondCount = 0;
     }
 }

@@ -167,23 +167,23 @@ public class MainMenu : MonoBehaviour
     public void PlayGame()
     {
         activeCharacterChooser = true;
+        CoinCounter.CounterReset();
+        EnemyCounter.CounterReset();
+        DiamondCounter.CounterReset();
     }
     public void Botton1()
     {
         playerChoosen = 0;
-        audioManager.StopSound("Music");
         StartCoroutine(LoadLevel(1,playerChoosen));
     }
     public void Botton2()
     {
         playerChoosen = 1;
-        audioManager.StopSound("Music");
         StartCoroutine(LoadLevel(1,playerChoosen));
     }
     public void Botton3()
     {
         playerChoosen = 2;
-        audioManager.StopSound("Music");
         StartCoroutine(LoadLevel(1,playerChoosen));
     }
     public void QuitGame()
@@ -223,8 +223,6 @@ public class MainMenu : MonoBehaviour
     }
     public void BackMenu()
     {
-        audioManager.StopSound("Music");
-
         if (SceneManager.GetActiveScene().buildIndex != 0)
         {
             StartCoroutine(LoadLevel(0,playerChoosen));

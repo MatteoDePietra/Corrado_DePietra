@@ -66,6 +66,20 @@ public class PlayerHealth : MonoBehaviour
             audioManager.PlaySound("Damage");
         }
     }
+
+    public void Heal (int heal)
+    {
+        if (currentHealth + heal > maxHealth)
+        {
+            currentHealth = maxHealth;
+            healthBar.SetHealth(currentHealth);
+        }
+        else
+        {
+            currentHealth += heal;
+            healthBar.SetHealth(currentHealth);
+        }
+    }
     private IEnumerator stopMovement()
     {
         playerMovement.moveSpeed.x = 0f;
@@ -91,6 +105,8 @@ public class PlayerHealth : MonoBehaviour
         yield return new WaitUntil(() => (currentClipInfo[0].clip.name.Equals("Death")) && (clipNormalizedTime > 1));
 
         CoinCounter.CounterReset();
+        EnemyCounter.CounterReset();
+        DiamondCounter.CounterReset();
         Time.timeScale = 0f;
         gameObject.SetActive(false);
         mainMenu.GameOver();

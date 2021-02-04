@@ -13,12 +13,15 @@ public class Bullet : MonoBehaviour
     private Animator animator;
     [SerializeField]
     private int damage;
+    private bool destroying;
+    [SerializeField]
     private float timer = 1.1f;
     private void Start()
     {
         animator = GetComponent<Animator>();
         body.velocity = transform.right * speed;
         audioManager = AudioManager.instance;
+        destroying = false;
         if (audioManager == null)
         {
             Debug.LogError("AudioManager non trovato");
@@ -34,8 +37,11 @@ public class Bullet : MonoBehaviour
         {
             StartCoroutine(BulletDestroy());
         }
-        if (currentClipInfo[0].clip.name.Equals("Bullet_End"))
+        if ((currentClipInfo[0].clip.name.Equals("Bullet_End")) || (currentClipInfo[0].clip.name.Equals("Bullet1_End")) || (currentClipInfo[0].clip.name.Equals("Bullet2_End")))
+        {
+            Debug.Log("ok");
             clipNormalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        }
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -53,12 +59,16 @@ public class Bullet : MonoBehaviour
     }
     private IEnumerator BulletDestroy()
     {
-        speed = 0;
-        body.velocity = transform.right * speed;
-        audioManager.PlaySound("Explosion");
-        animator.SetTrigger("Impact");
+        if (!destroying)
+        {
+            speed = 0;
+            body.velocity = transform.right * speed;
+            audioManager.PlaySound("Explosion");
+            animator.SetTrigger("Impact");
+            destroying = true;
+        }
 
-        yield return new WaitUntil(() => (currentClipInfo[0].clip.name.Equals("Bullet_End")) && (clipNormalizedTime >= 1));
+        yield return new WaitUntil(() => ((currentClipInfo[0].clip.name.Equals("Bullet_End")) || (currentClipInfo[0].clip.name.Equals("Bullet1_End")) || (currentClipInfo[0].clip.name.Equals("Bullet2_End"))) && (clipNormalizedTime >= 1));
        
         Destroy(gameObject);
     }
