@@ -107,7 +107,6 @@ public class PlayerMovement : MonoBehaviour
 
         if ((body.velocity.x != 0) && (body.velocity.y == 0) && (timerRun >= 0))
         {
-            //audioManager.SetPitchSound(0.6f, "Footstep");
             animator.SetBool("IsWalking", true);
             animator.SetBool("IsRunning", false);
             timerRun -= Time.deltaTime;
@@ -116,7 +115,6 @@ public class PlayerMovement : MonoBehaviour
         }
         else if ((body.velocity.x != 0) && (body.velocity.y == 0) && (timerRun < 0))
         {
-            //audioManager.SetPitchSound(0.9f, "Footstep");
             animator.SetBool("IsWalking", false);
             animator.SetBool("IsRunning", true);
         }

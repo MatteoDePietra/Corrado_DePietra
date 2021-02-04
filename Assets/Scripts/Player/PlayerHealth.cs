@@ -21,8 +21,9 @@ public class PlayerHealth : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
-        currentHealth = maxHealth = 5;
+
         alive = true;
+        currentHealth = maxHealth = 5;
         healthBar.SetMaxHealth(maxHealth);
 
         mainMenu = MainMenu.instance;
@@ -66,7 +67,6 @@ public class PlayerHealth : MonoBehaviour
             audioManager.PlaySound("Damage");
         }
     }
-
     public void Heal (int heal)
     {
         if (currentHealth + heal > maxHealth)

@@ -8,20 +8,22 @@ public class EnemyHealth : MonoBehaviour
     private Rigidbody2D body;
     private Animator animator;
     private EnemyBehavior enemyBehavior;
+    [SerializeField]
+    private HealthBar healthBar;
     private bool alive;
 
     [SerializeField]
     private int maxHealth;
     private int currentHealth;
-
     private void Start()
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        alive = true;
         enemyBehavior = GetComponent<EnemyBehavior>();
+
+        alive = true;
         currentHealth = maxHealth;
-        //healthBar.SetMaxHealth(maxHealth);
+        healthBar.SetMaxHealth(maxHealth);
     }
     private void Update()
     {
@@ -38,17 +40,16 @@ public class EnemyHealth : MonoBehaviour
         if (currentHealth > 0)
         {
             currentHealth -= damage;
-            //healthBar.SetHealth(currentHealth);
+            healthBar.SetHealth(currentHealth);
             animator.SetTrigger("Damage");
-            Debug.Log("Vita del nemico: " + currentHealth);
             StartCoroutine(stopMovement());
         }
     }
     private IEnumerator stopMovement()
     {
-            enemyBehavior.movementSpeed = 0f;
+            enemyBehavior.h = 0;
         yield return new WaitForSecondsRealtime(.4f);
-            enemyBehavior.movementSpeed = .5f;
+            enemyBehavior.h = 1;
     }
     private void HealthCheck()
     {
@@ -60,8 +61,9 @@ public class EnemyHealth : MonoBehaviour
     private IEnumerator Death()
     {
         EnemyCounter.AddEnemy();
+
         alive = false;
-        yield return new WaitForSecondsRealtime(.4f);
+        //yield return new WaitForSecondsRealtime(.4f);
         animator.SetTrigger("Death");
         enemyBehavior.movementSpeed = 0f;
         body.velocity = new Vector2(0, 0);

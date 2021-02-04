@@ -20,7 +20,7 @@ public class EnemyBehavior : MonoBehaviour
     internal float attackDistance = 0.1f;
     private float spawnDistance = 3f;
     private float timerPath;
-    private float h = 0;
+    internal int h = 0;
     private bool left = true;
     private int n = 5;
     internal bool attacking;
