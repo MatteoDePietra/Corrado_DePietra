@@ -6,7 +6,7 @@ public class CoinCounter : MonoBehaviour
     private Text text;
     internal static int coinCount = 0;
     [SerializeField]
-    internal static int minimum = 15;
+    internal static int minimum = 10;
     void Start()
     {
         text = GetComponent<Text> ();

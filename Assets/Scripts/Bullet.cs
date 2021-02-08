@@ -39,7 +39,6 @@ public class Bullet : MonoBehaviour
         }
         if ((currentClipInfo[0].clip.name.Equals("Bullet_End")) || (currentClipInfo[0].clip.name.Equals("Bullet1_End")) || (currentClipInfo[0].clip.name.Equals("Bullet2_End")))
         {
-            Debug.Log("ok");
             clipNormalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
         }
     }

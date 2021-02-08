@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     private Transform target;
+    [SerializeField]
+    private Timer timer;
 
     [SerializeField]
     private Animator crossFade = null;
@@ -19,7 +21,8 @@ public class MainMenu : MonoBehaviour
     private bool activeOptionMenu;
     private bool activePauseMenu;
     private bool activeGameOverMenu;
-    private bool activeWinMenu;
+    private bool activeWinRecordMenu;
+    private bool activeWinNoRecordMenu;
     internal float masterVolume;
     internal float musicVolume;
     [SerializeField]
@@ -63,7 +66,13 @@ public class MainMenu : MonoBehaviour
         activeCharacterChooser = false;
         activePauseMenu = false;
         activeGameOverMenu = false;
-        activeWinMenu = false;
+        activeWinRecordMenu = false;
+        activeWinNoRecordMenu = false;        
+    }
+    private void Start()
+    {
+        masterSlider.value = DataBackup.masterVolume;
+        musicSlider.value = DataBackup.musicVolume;
     }
     private void FollowTarget()
     {
@@ -131,13 +140,21 @@ public class MainMenu : MonoBehaviour
             instance.transform.GetChild(4).gameObject.SetActive(false);
         }
 
-        if (activeWinMenu)
+        if (activeWinRecordMenu)
         {
             instance.transform.GetChild(6).gameObject.SetActive(true);
         }
-        else if (!activeWinMenu)
+        else if (!activeWinRecordMenu)
         {
             instance.transform.GetChild(6).gameObject.SetActive(false);
+        }
+        if (activeWinNoRecordMenu)
+        {
+            instance.transform.GetChild(7).gameObject.SetActive(true);
+        }
+        else if (!activeWinNoRecordMenu)
+        {
+            instance.transform.GetChild(7).gameObject.SetActive(false);
         }
         if (SceneManager.GetActiveScene().buildIndex != 0)
         {
@@ -188,7 +205,6 @@ public class MainMenu : MonoBehaviour
     }
     public void QuitGame()
     {
-        audioManager.StopSound("Music");
         StartCoroutine(Quit());
     }
     public void GameOver()
@@ -202,6 +218,10 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex, playerChoosen));
         if (activeGameOverMenu)
             activeGameOverMenu = false;
+        if (activeWinRecordMenu)
+            activeWinRecordMenu = false;
+        if (activeWinNoRecordMenu)
+            activeWinNoRecordMenu = false;
     }
     public void PauseGame()
     {
@@ -236,16 +256,26 @@ public class MainMenu : MonoBehaviour
             activeOptionMenu = false;
         if (activeGameOverMenu)
             activeGameOverMenu = false;
-        if (activeWinMenu)
-            activeWinMenu = false;
+        if (activeWinRecordMenu)
+            activeWinRecordMenu = false;
+        if (activeWinNoRecordMenu)
+            activeWinNoRecordMenu = false;
         if (activeCharacterChooser)
             activeCharacterChooser = false;
     }
-    public void WinMenu()
+    public void WinMenu(bool flag)
     {
         canvasGroup.alpha = 0.6f;
-        if (!activeWinMenu)
-            activeWinMenu = true;
+        if (flag)
+        {
+            if (!activeWinRecordMenu)
+                activeWinRecordMenu = true;
+        }
+        else
+        {
+            if (!activeWinNoRecordMenu)
+                activeWinNoRecordMenu = true;
+        }
     }
     private IEnumerator LoadLevel(int levelIndex, int characterChoosen)
     {
@@ -255,14 +285,6 @@ public class MainMenu : MonoBehaviour
 
         yield return new WaitForSeconds(transitionTimeCF);
 
-        {
-            Data data = SaveSystem.Load();
-
-            masterVolume = data.masterVolume; 
-            masterSlider.value = masterVolume;
-            musicVolume = data.musicVolume;
-            musicSlider.value = musicVolume;
-        }
 
         SceneManager.LoadScene(levelIndex);
 
@@ -311,7 +333,7 @@ public class MainMenu : MonoBehaviour
 
         yield return new WaitForSeconds(transitionTimeCF);
 
-        SaveSystem.Save(this);
+        DataBackup.Save();
 
         Application.Quit();
     }

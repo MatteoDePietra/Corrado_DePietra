@@ -8,8 +8,10 @@ public class DoorBehaviour : MonoBehaviour
     private AudioManager audioManager;
     private PlayerMovement playerMovement;
     private Rigidbody2D body;
+    private bool beaten;
     private void Start()
     {
+        beaten = false;
         playerMovement = GameObject.Find("Player").transform.GetChild(MainMenu.playerChoosen).GetComponent<PlayerMovement>();;
         body = GameObject.Find("Player").transform.GetChild(MainMenu.playerChoosen).GetComponent<Rigidbody2D>();;
 
@@ -31,7 +33,7 @@ public class DoorBehaviour : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
-            if ((CoinCounter.coinCount>CoinCounter.minimum) && (EnemyCounter.enemyCount>EnemyCounter.minimum))
+            if ((CoinCounter.coinCount >= CoinCounter.minimum) && (EnemyCounter.enemyCount >= EnemyCounter.minimum) && (DiamondCounter.diamondCount >= DiamondCounter.minimum))
                 StartCoroutine(Win());
         }
     }
@@ -41,11 +43,18 @@ public class DoorBehaviour : MonoBehaviour
         playerMovement.moveSpeed = new Vector2 (0f, 0f);
         body.velocity = new Vector2(0, 0);
         body.bodyType = RigidbodyType2D.Kinematic;
+
         yield return new WaitForSeconds(.5f);
         Time.timeScale = 0f;
-        mainMenu.WinMenu();
-        Debug.Log("vado");
-        Debug.Log("non vado");
+        if ((TimerRecord.record - Timer.TimerControl +.03f) > 0)
+        {
+            TimerRecord.record = Timer.TimerControl;
+            DataBackup.record = TimerRecord.record;
+            beaten = true;
+        }
+        else 
+            beaten = false;
+        mainMenu.WinMenu(beaten);
         audioManager.SetVolumeSound(.2f, "Music");
         CoinCounter.CounterReset();
         EnemyCounter.CounterReset();
