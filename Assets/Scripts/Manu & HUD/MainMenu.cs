@@ -285,7 +285,6 @@ public class MainMenu : MonoBehaviour
 
         yield return new WaitForSeconds(transitionTimeCF);
 
-
         SceneManager.LoadScene(levelIndex);
 
         audioManager.PlaySound("Music");
